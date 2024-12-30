@@ -1,12 +1,23 @@
-import { TextField } from "@mui/material";
+import { MenuItem, Select, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { apiProductPost } from "../../api/producto/apiProducts";
+import { apiCategoriesGet } from "../../api/producto/apiCategories";
+import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
 const RegistroProductContainer = () => {
   const { register, handleSubmit } = useForm();
+  const [categories, setCategories] = useState([]);
   const nav = useNavigate();
+
+  useEffect(() => {
+    apiCategoriesGet().then((res) => {
+      console.log(res.data);
+      setCategories(res.data);
+    });
+  }, []);
+
   const handleUser = (data) => {
     apiProductPost(data)
       .then(() => {
@@ -65,13 +76,19 @@ const RegistroProductContainer = () => {
         <div>
           <label className="label">CategoryId</label>
         </div>
-        <TextField
+        <Select
           name="categoryId"
-          label="CategoryId"
-          variant="filled"
+          label="name"
+          defaultValue="1"
           required
           {...register("categoryId")}
-        />
+        >
+          {categories.map((category) => (
+            <MenuItem key={category.id} value={category.id}>
+              {category.name}
+            </MenuItem>
+          ))}
+        </Select>
         <div>
           <label className="label">Link Img</label>
         </div>
@@ -88,7 +105,10 @@ const RegistroProductContainer = () => {
           </button>
         </div>
         <div>
-          <button className="boton" onClick={() => nav("/home")}> Regresar</button>
+          <button className="boton" onClick={() => nav("/home")}>
+            {" "}
+            Regresar
+          </button>
         </div>
       </form>
     </div>

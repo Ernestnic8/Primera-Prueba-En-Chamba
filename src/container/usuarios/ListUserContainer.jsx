@@ -8,7 +8,6 @@ import {
   apiUsersGet,
   apiUsersPut,
 } from "../../api/usuario/apiUsers";
-import { useNavigate } from "react-router-dom";
 import { Box, IconButton, Tooltip } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -16,7 +15,6 @@ import Swal from "sweetalert2";
 
 const ListUserContainer = () => {
   const [data, setData] = useState([]);
-  const nav = useNavigate();
 
   const handleCarga = () => {
     apiUsersGet().then((res) => {
@@ -49,7 +47,8 @@ const ListUserContainer = () => {
           text: error.response.data.message,
           color: "red",
           confirmButtonColor: "red",
-        });
+        });        
+        table.setEditingRow(null);
       });
   };
 
