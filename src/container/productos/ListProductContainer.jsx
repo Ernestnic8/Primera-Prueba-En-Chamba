@@ -29,9 +29,8 @@ const ListProductContainer = () => {
   }, []);
 
   const handleUpdate = ({ values, table }) => {
-    const { id, price, ...rest } = values;
-    const updatedValues = { ...rest, price: String(Number(price)) };
-    apiProductPut(id, updatedValues)
+    const { id } = values;
+    apiProductPut(id, values)
       .then(() => {
         Swal.fire({
           icon: "success",
@@ -40,6 +39,7 @@ const ListProductContainer = () => {
           confirmButtonColor: "green",
         });
         table.setEditingRow(null);
+        handleCarga();
       })
       .catch((error) => {
         console.log(error);
@@ -77,7 +77,12 @@ const ListProductContainer = () => {
   };
 
   const columns = useMemo(
-    () => [
+    () => [      
+      {
+        accessorKey: "id", //access nested data with dot notation
+        header: "ID",
+        size: 50,
+      },
       {
         accessorKey: "title", //access nested data with dot notation
         header: "Titulo",
