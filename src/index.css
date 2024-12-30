@@ -1,0 +1,80 @@
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url("https://es.starkist.com/wp-content/uploads/2020/03/healthy_living_lineup_910x445.jpg");
+  background-size: cover;
+  .label {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .boton {
+    background-color: #007bff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 1rem;
+  }
+  .registrar {
+    color: #ee0909;
+    text-decoration: none;
+    margin-top: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+}
+
+.registro{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-size: cover;
+  .label {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .boton {
+    background-color: #007bff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 1rem;
+  }
+}
+
+.container{
+  display: contents;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-size: cover;
+  .label {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .boton {
+    background-color: #007bff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 1rem;
+  }
+  .table{
+    margin-top: 1rem;
+    padding: 2rem, 3rem, 2rem, 3rem;
+  }
+  .not-found{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+}
