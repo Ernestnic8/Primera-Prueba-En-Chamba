@@ -9,7 +9,8 @@ import {
   apiProductDelete,
 } from "../../api/producto/apiProducts";
 import { useNavigate } from "react-router-dom";
-import { Box, IconButton, Tooltip } from "@mui/material";
+import { Box, Fab, IconButton, Tooltip } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
@@ -77,10 +78,11 @@ const ListProductContainer = () => {
   };
 
   const columns = useMemo(
-    () => [      
+    () => [
       {
         accessorKey: "id", //access nested data with dot notation
         header: "ID",
+        enableEditing: false,
         size: 50,
       },
       {
@@ -105,6 +107,7 @@ const ListProductContainer = () => {
         accessorKey: "category.name",
         header: "Categoria",
         size: 150,
+        enableEditing: false,
       },
     ],
     []
@@ -149,6 +152,7 @@ const ListProductContainer = () => {
           <MaterialReactTable table={table} />
         </div>
       </div>
+      
     </>
   );
 };

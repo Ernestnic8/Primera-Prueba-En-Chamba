@@ -27,12 +27,17 @@
   }
 }
 
+:root{  
+  background-color: rgb(162, 190, 190);
+}
+
 .registro{
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   background-size: cover;
+  background-color: white;
   .label {
     font-size: 1.5rem;
     margin-bottom: 1rem;
@@ -52,6 +57,7 @@
   display: contents;
   justify-content: center;
   align-items: center;
+  text-align: center;
   height: 100vh;
   background-size: cover;
   .label {

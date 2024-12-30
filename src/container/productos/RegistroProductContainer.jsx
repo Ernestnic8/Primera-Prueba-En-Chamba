@@ -2,23 +2,31 @@ import { TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { apiProductPost } from "../../api/producto/apiProducts";
+import Swal from "sweetalert2";
 
 const RegistroProductContainer = () => {
   const { register, handleSubmit } = useForm();
   const nav = useNavigate();
   const handleUser = (data) => {
-    if(!data.id)
-    {apiProductPost(data)
-      .then((res) => {
-        console.log(res);
+    apiProductPost(data)
+      .then(() => {
+        Swal.fire({
+          icon: "success",
+          title: "Producto registrado",
+          color: "green",
+          confirmButtonColor: "green",
+        });
         nav("/home");
       })
       .catch((error) => {
-        console.log(error);
+        Swal.fire({
+          icon: "error",
+          title: "Error al ingresar el producto",
+          text: error.response.data.message,
+          color: "red",
+          confirmButtonColor: "red",
+        });
       });
-    }else{
-        alert("Hay un ID")
-    }
   };
   return (
     <div className="registro">
@@ -79,7 +87,9 @@ const RegistroProductContainer = () => {
             Ingresar
           </button>
         </div>
-        <div></div>
+        <div>
+          <button className="boton" onClick={() => nav("/home")}> Regresar</button>
+        </div>
       </form>
     </div>
   );

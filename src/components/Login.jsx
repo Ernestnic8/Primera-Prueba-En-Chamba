@@ -76,6 +76,11 @@ const Login = ({setIsLogged}) => {
           </button>
         </div>
         <div>
+          <span>
+            <a></a>
+            <a></a>
+            ¿No tienes cuenta?
+          </span>
           <label className="registrar" onClick={() => nav("/register")}>
             Registrarse
           </label>
