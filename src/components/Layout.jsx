@@ -1,10 +1,13 @@
-import { Outlet, Link } from "react-router-dom";
+import {Link } from "react-router-dom";
+import "../App.css";
 
 const Layout = () => {
   return (
-    <>
+    <header className="header">
+
+      {/* links de navegación */}
       <nav>
-        <ul>
+        <ul className="nav-container">
           <li>
             <Link to="/home">Productos</Link>
           </li>
@@ -13,8 +16,8 @@ const Layout = () => {
           </li>
         </ul>
       </nav>
-    </>
-  )
+    </header>
+  );
 }
 
 export default Layout
