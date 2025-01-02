@@ -13,7 +13,6 @@ const RegistroProductContainer = () => {
 
   useEffect(() => {
     apiCategoriesGet().then((res) => {
-      console.log(res.data);
       setCategories(res.data);
     });
   }, []);

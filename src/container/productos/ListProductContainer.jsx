@@ -55,25 +55,38 @@ const ListProductContainer = () => {
 
   const handleDelete = (row) => {
     const { id } = row.original;
-    apiProductDelete(id)
-      .then(() => {
-        Swal.fire({
-          icon: "success",
-          title: "Producto eliminado",
-          color: "green",
-          confirmButtonColor: "green",
-        });
-        handleCarga();
-      })
-      .catch((error) => {
-        Swal.fire({
-          icon: "error",
-          title: "Error al eliminar el producto",
-          text: error.response.data.message,
-          color: "red",
-          confirmButtonColor: "red",
-        });
-      });
+    Swal.fire({
+      title: "¿Estas seguro?",
+      text: "No podras revertir esta accion",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "red",
+      cancelButtonColor: "green",
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        apiProductDelete(id)
+          .then(() => {
+            Swal.fire({
+              icon: "success",
+              title: "Producto eliminado",
+              color: "green",
+              confirmButtonColor: "green",
+            });
+            handleCarga();
+          })
+          .catch((error) => {
+            Swal.fire({
+              icon: "error",
+              title: "Error al eliminar el producto",
+              text: error.response.data.message,
+              color: "red",
+              confirmButtonColor: "red",
+            });
+          });
+      }
+    });
   };
 
   const columns = useMemo(
@@ -81,13 +94,14 @@ const ListProductContainer = () => {
       {
         accessorKey: "image", //access nested data with dot notation
         header: "Imagen",
-        enableEditing: false,
         Cell: ({ cell }) => {
           return (
-            <img src="" alt="imagen" style={{ width: "50px", height: "50px" }} />
+            console.log(cell),
+            //console.log(cell.row.original.image),
+            <img src={cell.row.original.category.image} alt="imagen" style={{ width: "90%", height: "90%" }} />
           );
         },
-        size: 50,
+        size: 100,
       },
       {
         accessorKey: "id", //access nested data with dot notation
