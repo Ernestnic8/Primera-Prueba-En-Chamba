@@ -8,11 +8,11 @@ import Swal from "sweetalert2";
 
 const Login = ({setIsLogged}) => {
   const [user, setUser] = useState([]);
-  let usuario = [];
+  var usuario = [];
   const nav = useNavigate();
   const { register, handleSubmit } = useForm();
   const onSubmit = (data) => {
-    usuario = user.find((element) => element.usaurio === data.usuuario);
+    usuario = user.find((element) => element.usuario === data.usuario);
     if (usuario === undefined) {
       Swal.fire({
         icon: "error",
@@ -24,6 +24,7 @@ const Login = ({setIsLogged}) => {
     } else {
       if (usuario.pass === data.pass) {
         setIsLogged(true);
+        usuario = [];
         nav("/productos");
       } else {
         Swal.fire({

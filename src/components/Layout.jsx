@@ -6,7 +6,7 @@ const Layout = () => {
     <header className="header">
 
       {/* links de navegación */}
-      {/* <nav>
+      <nav>
         <ul className="nav-container">
           <li>
             <Link to="/home">Productos</Link>
@@ -15,8 +15,8 @@ const Layout = () => {
             <Link to="/users">Usuarios</Link>
           </li>
         </ul>
-      </nav> */}
-      <nav>
+      </nav>
+      {/* <nav>
         <ul className="nav-container">
           <li>
             <Link to="/productos">Productos</Link>
@@ -25,7 +25,7 @@ const Layout = () => {
             <Link to="/usuario">Usuarios</Link>
           </li>
         </ul>
-      </nav>
+      </nav> */}
     </header>
   );
 }
