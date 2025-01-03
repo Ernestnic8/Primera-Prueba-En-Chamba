@@ -6,13 +6,23 @@ const Layout = () => {
     <header className="header">
 
       {/* links de navegación */}
-      <nav>
+      {/* <nav>
         <ul className="nav-container">
           <li>
             <Link to="/home">Productos</Link>
           </li>
           <li>
             <Link to="/users">Usuarios</Link>
+          </li>
+        </ul>
+      </nav> */}
+      <nav>
+        <ul className="nav-container">
+          <li>
+            <Link to="/productos">Productos</Link>
+          </li>
+          <li>
+            <Link to="/usuario">Usuarios</Link>
           </li>
         </ul>
       </nav>

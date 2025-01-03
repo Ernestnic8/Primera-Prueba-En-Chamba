@@ -1,6 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { useState } from "react";
-import ListUserPages from "../pages/usuarios/ListUserPages";
+import ListUserPages from "../pages/ecommerce/pages/ListUserPages";
 import Layout from "../components/Layout";
 import Login from "../pages/ecommerce/Login";
 import ListProductPage from "../pages/ecommerce/pages/ListProductPage";
@@ -49,7 +49,7 @@ const Ecommerce = () => {
             }
           />
           <Route
-            path="/users/*"
+            path="/usuario/*"
             element={
               isLogged ? (
                 <>

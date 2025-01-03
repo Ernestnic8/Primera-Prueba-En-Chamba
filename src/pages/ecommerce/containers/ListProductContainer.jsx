@@ -21,12 +21,12 @@ const ListProductContainer = () => {
   const nav = useNavigate();
 
   const handleCarga = () => {
-    obtenerProductos().then((res) => {
-      setData(res.data.response);
-    });
     categoriasApi().then((res) => {
       setCategories(res.data.response);
     });
+    obtenerProductos().then((res) => {
+      setData(res.data.response);
+    });    
   };
 
   useEffect(() => {
@@ -55,6 +55,7 @@ const ListProductContainer = () => {
           color: "red",
           confirmButtonColor: "red",
         });
+        table.setEditingRow(null);
       });
   };
 
@@ -169,6 +170,16 @@ const ListProductContainer = () => {
             }}
           >
             Agregar Producto
+          </button>
+        </div>
+        <div>
+          <button
+            className="boton"
+            onClick={() => {
+              handleCarga();
+            }}
+          >
+            Actualizar
           </button>
         </div>
         <div className="table">

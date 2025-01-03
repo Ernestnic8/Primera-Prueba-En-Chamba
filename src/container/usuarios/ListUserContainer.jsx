@@ -112,13 +112,7 @@ const ListUserContainer = () => {
     ],
     []
   );
-
-  const sencura = (password) => {
-    return password.map(function (item) {
-      return item === "" ? "" : "*";
-    });
-  };
-
+  
   const table = useMaterialReactTable({
     columns,
     data,
