@@ -12,7 +12,7 @@ const Login = ({setIsLogged}) => {
   const nav = useNavigate();
   const { register, handleSubmit } = useForm();
   const onSubmit = (data) => {
-    usuario = user.find((element) => element.email === data.email);
+    usuario = user.find((element) => element.usaurio === data.usuuario);
     if (usuario === undefined) {
       Swal.fire({
         icon: "error",
@@ -22,7 +22,7 @@ const Login = ({setIsLogged}) => {
         confirmButtonColor: "red",
       });
     } else {
-      if (usuario.password === data.password) {
+      if (usuario.pass === data.pass) {
         setIsLogged(true);
         nav("/productos");
       } else {
@@ -39,34 +39,33 @@ const Login = ({setIsLogged}) => {
 
   useEffect(() => {
     obtenerUsuarios().then((res) => {
-      setUser(res.data);
+      setUser(res.data.response);
     });
   }, []);
   return (
     <div className="login">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <label className="label">email</label>
+          <label className="label">Usuario</label>
         </div>
         <TextField
-          name="email"
-          label="Email"
+          name="usuario"
+          label="Usuario"
           variant="filled"
           required
-          type="email"
-          {...register("email")}
+          {...register("usuario")}
         />
         <div>
           <label className="label">password</label>
         </div>
         <TextField
-          name="password"
-          label="password"
+          name="pass"
+          label="Contraseña"
           variant="filled"
           required
           type="password"
           values={usuario.password}
-          {...register("password")}
+          {...register("pass")}
         />
         <div>
           <button className="boton" type="submit">
