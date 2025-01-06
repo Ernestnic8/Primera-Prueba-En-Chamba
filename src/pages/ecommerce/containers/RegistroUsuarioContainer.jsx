@@ -17,7 +17,7 @@ const RegistroUsuarioContainer = () => {
           color: "green",
           confirmButtonColor: "green",
         }).then(() => {
-          nav("/");
+          nav("/ecommerce");
         });
       })
       .catch((error) => {

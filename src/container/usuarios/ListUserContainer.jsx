@@ -54,25 +54,38 @@ const ListUserContainer = () => {
 
   const handleDelete = (row) => {
     const { id } = row.original;
-    apiUsersDelete(id)
-      .then(() => {
-        Swal.fire({
-          icon: "success",
-          title: "Usuario eliminado",
-          color: "green",
-          confirmButtonColor: "green",
-        });
-        handleCarga();
-      })
-      .catch((error) => {
-        Swal.fire({
-          icon: "error",
-          title: "Error al eliminar el Usuario",
-          text: error.response.data.message,
-          color: "red",
-          confirmButtonColor: "red",
-        });
-      });
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "No podrás revertir esto",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "green",
+      cancelButtonColor: "red",
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        apiUsersDelete(id)
+          .then(() => {
+            Swal.fire({
+              icon: "success",
+              title: "Usuario eliminado",
+              color: "green",
+              confirmButtonColor: "green",
+            });
+            handleCarga();
+          })
+          .catch((error) => {
+            Swal.fire({
+              icon: "error",
+              title: "Error al eliminar el usuario",
+              text: error.response.data.message,
+              color: "red",
+              confirmButtonColor: "red",
+            });
+          });
+      }
+    });
   };
 
   const columns = useMemo(

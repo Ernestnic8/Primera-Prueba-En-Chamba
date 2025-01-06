@@ -15,12 +15,13 @@ const Ruta = () => {
             <Route path="*" element={<h1 className="not-found">Error 401 Not Found</h1>} />
             <Route index path="/" element={<Login setIsLogged={setIsLogged} /> } />
             <Route path="register" element={<RegistroUserPage />} />
-            <Route path="home" element={isLogged?(<><Layout/><ListProductPage/></>): (<Navigate to="/login"/>)} />
-            <Route path="home/register/*" element={isLogged?(<><Layout/> <RegistroProductPage/></>): (<Navigate to="/login"/>)} />
-            <Route path="users/*" element={isLogged?(<> <Layout/> <ListUserPages/> </>): (<Navigate to="/login"/>)} />
+            <Route path="home" element={isLogged?(<><Layout /><ListProductPage/></>): (<Navigate to="/"/>)} />
+            <Route path="home/register/*" element={isLogged?(<><Layout /> <RegistroProductPage/></>): (<Navigate to="/"/>)} />
+            <Route path="users/*" element={isLogged?(<> <Layout /> <ListUserPages/> </>): (<Navigate to="/"/>)} />
           </Routes>
       </>
     );
 }
+
 
 export default Ruta

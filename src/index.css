@@ -27,6 +27,36 @@
   }
 }
 
+.login2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url("https://www.ceupe.com/images/easyblog_articles/1506/b2ap3_amp_formato-blog.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  .label {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .boton {
+    background-color: #007bff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 1rem;
+  }
+  .registrar {
+    color: #ee0909;
+    text-decoration: none;
+    margin-top: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+}
+
 :root{  
   background-color: rgb(162, 190, 190);
 }
@@ -82,5 +112,30 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
+  }
+}
+
+.inicio{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 50vh;
+  background-size: cover;
+  background-color: white;
+  .label {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .boton {
+    background-color: #007bff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 1rem;
+    :hover{
+      background-color: #002750;
+    }
   }
 }

@@ -25,7 +25,7 @@ const Login = ({setIsLogged}) => {
       if (usuario.pass === data.pass) {
         setIsLogged(true);
         usuario = [];
-        nav("/productos");
+        nav("/ecommerce/productos");
       } else {
         Swal.fire({
           icon: "error",
@@ -44,7 +44,7 @@ const Login = ({setIsLogged}) => {
     });
   }, []);
   return (
-    <div className="login">
+    <div className="login2">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label className="label">Usuario</label>
@@ -79,7 +79,7 @@ const Login = ({setIsLogged}) => {
             <a></a>
             ¿No tienes cuenta?
           </span>
-          <label className="registrar" onClick={() => nav("/registro")}>
+          <label className="registrar" onClick={() => nav("/ecommerce/registro")}>
             Registrarse
           </label>
         </div>

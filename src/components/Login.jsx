@@ -25,7 +25,7 @@ const Login = ({setIsLogged}) => {
     } else {
       if (usuario.password === data.password) {
         setIsLogged(true);
-        nav("/home");
+        nav("/fakeapi/home");
       } else {
         Swal.fire({
           icon: "error",
@@ -81,7 +81,7 @@ const Login = ({setIsLogged}) => {
             <a></a>
             ¿No tienes cuenta?
           </span>
-          <label className="registrar" onClick={() => nav("/register")}>
+          <label className="registrar" onClick={() => nav("/fakeapi/register")}>
             Registrarse
           </label>
         </div>

@@ -51,7 +51,7 @@ const ListUserContainer = () => {
         accessorKey: "pass",
         header: "contraseña",
         size: 150,
-        Cell: ({ cell, columns }) => {
+        Cell: ({ cell }) => {
           return (
             <span>{`${cell.row.original.pass.replace(/./g, "*")}`}</span>
           );
@@ -94,25 +94,38 @@ const ListUserContainer = () => {
 
   const handleDelete = (row) => {
     const { id } = row.original;
-    eliminarUsuario(id)
-      .then(() => {
-        Swal.fire({
-          icon: "success",
-          title: "Usuario eliminado",
-          color: "green",
-          confirmButtonColor: "green",
-        });
-        handleCarga();
-      })
-      .catch((error) => {
-        Swal.fire({
-          icon: "error",
-          title: "Error al eliminar el Usuario",
-          text: error.response.data.message,
-          color: "red",
-          confirmButtonColor: "red",
-        });
-      });
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Una vez eliminado, no se podrá recuperar",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "red",
+      cancelButtonColor: "green",
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        eliminarUsuario(id)
+          .then(() => {
+            Swal.fire({
+              icon: "success",
+              title: "Usuario eliminado",
+              color: "green",
+              confirmButtonColor: "green",
+            });
+            handleCarga();
+          })
+          .catch((error) => {
+            Swal.fire({
+              icon: "error",
+              title: "Error al eliminar el usuario",
+              text: error.response.data.message,
+              color: "red",
+              confirmButtonColor: "red",
+            });
+          });
+      }
+    });
   };
 
   const table = useMaterialReactTable({

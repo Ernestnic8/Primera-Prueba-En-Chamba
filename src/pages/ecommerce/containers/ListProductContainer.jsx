@@ -109,14 +109,6 @@ const ListProductContainer = () => {
         size: 150,
       },
       {
-        accessorKey: "precio",
-        header: "Precio",
-        size: 150,
-        Cell: ({ cell }) => {
-          return <span>{`$${cell.row.original.precio}`}</span>;
-        },
-      },
-      {
         accessorKey: "categoriaId",
         header: "Categoria",
         size: 150,
@@ -133,8 +125,16 @@ const ListProductContainer = () => {
           );
         },
       },
+      {
+        accessorKey: "precio",
+        header: "Precio",
+        size: 150,
+        Cell: ({ cell }) => {
+          return <span>{`$${cell.row.original.precio}`}</span>;
+        },
+      },
     ],
-    []
+    [categories]
   );
 
   const table = useMaterialReactTable({
@@ -166,7 +166,7 @@ const ListProductContainer = () => {
           <button
             className="boton"
             onClick={() => {
-              nav("/producto/registro");
+              nav("/ecommerce/producto/registro");
             }}
           >
             Agregar Producto

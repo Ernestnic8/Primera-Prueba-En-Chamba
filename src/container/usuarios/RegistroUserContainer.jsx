@@ -10,7 +10,7 @@ const RegistroUserContainer = () => {
     apiUsersPost(data)
       .then((res) => {
         console.log(res);
-        nav("/");
+        nav("/fakeapi");
       })
       .catch((error) => {
         console.log(error);

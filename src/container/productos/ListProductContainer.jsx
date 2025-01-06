@@ -97,8 +97,8 @@ const ListProductContainer = () => {
         Cell: ({ cell }) => {
           return (
             console.log(cell),
-            //console.log(cell.row.original.image),
-            <img src={cell.row.original.category.image} alt="imagen" style={{ width: "90%", height: "90%" }} />
+            console.log(cell.row.original.images),
+            <img src={cell.row.original.images} alt="imagen" style={{ width: "90%", height: "90%" }} />
           );
         },
         size: 100,
@@ -166,7 +166,7 @@ const ListProductContainer = () => {
           <button
             className="boton"
             onClick={() => {
-              nav("/home/register");
+              nav("/fakeapi/home/register");
             }}
           >
             Agregar Producto

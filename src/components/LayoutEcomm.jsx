@@ -1,17 +1,17 @@
 import {Link } from "react-router-dom";
 import "../App.css";
 
-const Layout = () => {
+const LayoutEcomm = () => {
   return (
     <header className="header">
 
        <nav>
         <ul className="nav-container">
           <li>
-            <Link to="/fakeapi/home">Productos</Link>
+            <Link to="/ecommerce/productos">Productos</Link>
           </li>
           <li>
-            <Link to="/fakeapi/users">Usuarios</Link>
+            <Link to="/ecommerce/usuario">Usuarios</Link>
           </li>
         </ul>
       </nav>
@@ -19,4 +19,4 @@ const Layout = () => {
   );
 }
 
-export default Layout
+export default LayoutEcomm

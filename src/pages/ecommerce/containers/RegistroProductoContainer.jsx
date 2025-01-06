@@ -26,7 +26,7 @@ const RegistroProductoContainer = () => {
           color: "green",
           confirmButtonColor: "green",
         });
-        nav("/productos");
+        nav("/ecommerce/productos");
       })
       .catch((error) => {
         Swal.fire({
@@ -95,7 +95,7 @@ const RegistroProductoContainer = () => {
           </button>
         </div>
         <div>
-          <button className="boton" onClick={() => nav("/productos")}>
+          <button className="boton" onClick={() => nav("/ecommerce/productos")}>
             {" "}
             Regresar
           </button>

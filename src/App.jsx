@@ -8,7 +8,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Inicio />} />
+        <Route path="/" element={<Inicio/>} />
         <Route path="/fakeapi/*" element={<Ruta />} />
         <Route path="/ecommerce/*" element={<Ecommerce />} />
         <Route path="*" element={<h1 className="not-found">Error 401 Not Found</h1>} />
