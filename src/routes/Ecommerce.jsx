@@ -11,15 +11,14 @@ const Ecommerce = () => {
   const [isLogged, setIsLogged] = useState(false);
   return (
     <>
-      <BrowserRouter>
         <Routes>
           <Route
-            path="/*"
+            path="*"
             element={<h1 className="not-found">Error 401 Not Found</h1>}
           />
           <Route
             index
-            path="/login2"
+            path="/"
             element={<Login setIsLogged={setIsLogged} />}
           />
           <Route path="/registro" element={<RegistroUsuarioPage/>} />
@@ -32,7 +31,7 @@ const Ecommerce = () => {
                   <ListProductPage />
                 </>
               ) : (
-                <Navigate to="/login2" />
+                <Navigate to="/" />
               )
             }
           />
@@ -44,7 +43,7 @@ const Ecommerce = () => {
                   <Layout /> <RegistroProductoPage />
                 </>
               ) : (
-                <Navigate to="/login2" />
+                <Navigate to="/" />
               )
             }
           />
@@ -57,12 +56,11 @@ const Ecommerce = () => {
                   <Layout /> <ListUserPages />{" "}
                 </>
               ) : (
-                <Navigate to="/login2" />
+                <Navigate to="/" />
               )
             }
           />
         </Routes>
-      </BrowserRouter>
     </>
   );
 };

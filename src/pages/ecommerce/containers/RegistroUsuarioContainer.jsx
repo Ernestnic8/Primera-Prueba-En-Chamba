@@ -17,7 +17,7 @@ const RegistroUsuarioContainer = () => {
           color: "green",
           confirmButtonColor: "green",
         }).then(() => {
-          nav("/login2");
+          nav("/");
         });
       })
       .catch((error) => {
