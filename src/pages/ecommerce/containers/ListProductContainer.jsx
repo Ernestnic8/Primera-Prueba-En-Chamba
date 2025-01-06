@@ -7,18 +7,45 @@ import {
   actualizarProducto,
   obtenerProductos,
   eliminarProducto,
-  categoriasApi
+  categoriasApi,
 } from "../../../api/ecommerce/productosApi";
 import { useNavigate } from "react-router-dom";
-import { Box, IconButton, Tooltip } from "@mui/material";
+import {
+  Badge,
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Fab,
+  IconButton,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+
+const car={
+  id: 0,
+  nombre: "",
+  precio: 0,
+  cantidad: 0,
+}
 
 const ListProductContainer = () => {
   const [data, setData] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [carrito, setCarrito] = useState(car);
   const nav = useNavigate();
+
+  const handleOpen = () => {
+    console.log("open", open);
+    setOpen(!open);
+  };
 
   const handleCarga = () => {
     categoriasApi().then((res) => {
@@ -26,7 +53,7 @@ const ListProductContainer = () => {
     });
     obtenerProductos().then((res) => {
       setData(res.data.response);
-    });    
+    });
   };
 
   useEffect(() => {
@@ -154,6 +181,11 @@ const ListProductContainer = () => {
             <DeleteIcon />
           </IconButton>
         </Tooltip>
+        <Tooltip title="AddCarrito" onClick={() => console.log("AddCarrito")}>
+          <IconButton color="success">
+            <AddShoppingCartIcon />
+          </IconButton>
+        </Tooltip>
       </Box>
     ),
   });
@@ -185,10 +217,68 @@ const ListProductContainer = () => {
         <div className="table">
           <MaterialReactTable table={table} />
         </div>
+
+
+
+        
       </div>
       
-    </>
-  )
-}
+      <div style={{ position: "fixed", bottom: "0%", right: "0%" }}>
+        <Box sx={{ m: 1 }}>
+          <Fab color="primary" aria-label="add">
+            <Badge badgeContent={1} color="warning" onClick={handleOpen}>
+              <ShoppingCartIcon />
+            </Badge>
+          </Fab>
+        </Box>
+      </div>
 
-export default ListProductContainer
+      <div>
+        {open && (
+          <Box
+            sx={{
+              display: "flex",
+              mx: "2px",
+              transform: "scale(1)",
+              right: "0",
+              top: "0",
+              position: "fixed",
+              height: "100%",
+              backgroundColor: "rgba(39, 39, 39, 0.5)",
+              paddingLeft: "76%",
+            }}
+          >
+            <Card open={open} onClose={handleOpen} variant="outlined">
+              <h1>Carrito de compras</h1>
+              <Button onClick={handleOpen}>Cerrar</Button>
+              <CardContent>
+                <Typography
+                  gutterBottom
+                  sx={{ color: "text.secondary", fontSize: 14 }}
+                >
+                  Word of the Day
+                </Typography>
+                <Typography variant="h5" component="div">
+                  G
+                </Typography>
+                <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
+                  adjective
+                </Typography>
+                <Typography variant="body2">
+                  well meaning and kindly.
+                  <br />
+                  {'"a benevolent smile"'}
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button size="small">Learn More</Button>
+              </CardActions>
+            </Card>
+          </Box>
+        )}
+      </div>
+    </>
+  );
+};
+
+export default ListProductContainer;
