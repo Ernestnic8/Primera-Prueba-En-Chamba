@@ -250,7 +250,7 @@ const ListProductContainer = () => {
       </div>
 
       <div style={{ position: "fixed", bottom: "4%", right: "0%", zIndex: 1000 }}>
-        <Box sx={{ m: 1 }} onClick={handleOpen}523
+        <Box sx={{ m: 1 }} onClick={handleOpen}
           >
           <Fab color="primary" aria-label="add">
             <Badge badgeContent={carrito.length} color="warning">
