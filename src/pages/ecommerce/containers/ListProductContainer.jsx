@@ -26,24 +26,21 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import CloseIcon from "@mui/icons-material/Close";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 
-const car = {
-  id: 0,
-  nombre: "",
-  precio: 0,
-  cantidad: 0,
-}
 
 const ListProductContainer = () => {
   const [data, setData] = useState([]);
   const [categories, setCategories] = useState([]);
   const [open, setOpen] = useState(false);
-  const [carrito, setCarrito] = useState(car);
+  const [carrito, setCarrito] = useState([]);
+  const [total, setTotal] = useState(0);
   const nav = useNavigate();
 
   const handleOpen = () => {
-    console.log("open", open);
     setOpen(!open);
   };
 
@@ -59,6 +56,13 @@ const ListProductContainer = () => {
   useEffect(() => {
     handleCarga();
   }, []);
+
+  const handleAddCart=(producto)=>{
+    const {titulo,precio,imagen, id} = producto;
+    console.log(producto);
+    setCarrito([...carrito,{id:id,nombre:titulo,precio:precio,cantidad:1,imagen:imagen}]);
+    console.log(carrito);
+  }
 
   const handleUpdate = ({ values, table }) => {
     const { id } = values;
@@ -160,6 +164,20 @@ const ListProductContainer = () => {
           return <span>{`$${cell.row.original.precio}`}</span>;
         },
       },
+      {
+        accessorKey: "imagen",
+        header: "Imagen",
+        size: 150,
+        Cell: ({ cell }) => {
+          return (
+            <img
+              src={cell.row.original.imagen}
+              alt={cell.row.original.titulo}
+              style={{ width: "100px", height: "100px" }}
+            />
+          );
+        },
+      }
     ],
     [categories]
   );
@@ -181,7 +199,7 @@ const ListProductContainer = () => {
             <DeleteIcon />
           </IconButton>
         </Tooltip>
-        <Tooltip title="AddCarrito" onClick={() => console.log("AddCarrito")}>
+        <Tooltip title="AddCarrito" onClick={() => handleAddCart(row.original)}>
           <IconButton color="success">
             <AddShoppingCartIcon />
           </IconButton>
@@ -217,16 +235,12 @@ const ListProductContainer = () => {
         <div className="table">
           <MaterialReactTable table={table} />
         </div>
-
-
-
-
       </div>
 
-      <div style={{ position: "fixed", bottom: "0%", right: "0%" }}>
+      <div style={{ position: "fixed", bottom: "4%", right: "0%", zIndex: 1000 }}>
         <Box sx={{ m: 1 }}>
           <Fab color="primary" aria-label="add">
-            <Badge badgeContent={1} color="warning" onClick={handleOpen}>
+            <Badge badgeContent={carrito.length} color="warning" onClick={handleOpen}>
               <ShoppingCartIcon />
             </Badge>
           </Fab>
@@ -261,39 +275,101 @@ const ListProductContainer = () => {
                 height: "100%",
                 backgroundColor: "#fff", // Fondo del sidebar
                 zIndex: 1000, // Por encima del fondo
-                boxShadow: "-2px 0 5px rgba(0, 0, 0, 0.5)", // Sombra para dar profundidad
+                boxShadow: "-2px 0 5px rgba(0, 0, 0, 0.7)", // Sombra para dar profundidad
                 overflowY: "auto",
                 padding: "16px",
               }}
             >
-              <Card open={open} onClose={handleOpen} variant="outlined">
-                <h1>Carrito de compras</h1>
-                <Button onClick={handleOpen} sx={{ marginBottom: "16px" }}>
-                  Cerrar
-                </Button>
+              <Button
+                onClick={handleOpen}
+                sx={{
+                  right: "0",
+                  top: "0",
+                  position: "absolute",
+                  color: "red",
+                }}
+              >
+                <CloseIcon />
+              </Button>
+              <div>
+                <Typography variant="h5" component="div" sx={{ textAlign: "center" }}>
+                  Carrito de compra
+                </Typography>
+              </div>
+              {carrito.length===0 && <Typography variant="h5" component="div" sx={{ textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "50%", color:"grey" }}>
+                No hay productos en el carrito
+              </Typography>}
+              {carrito.length>0 &&(<Card
+                open={open}
+                onClose={handleOpen}
+                variant="outlined"
+                sx={{ marginTop: "18px" }}
+              >
                 <CardContent>
-                  <Typography
-                    gutterBottom
-                    sx={{ color: "text.secondary", fontSize: 14 }}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      top: "12",
+                      right: "0",
+                      position: "absolute",
+                    }}
                   >
-                    Word of the Day
+                    <Button sx={{ color: "red" }} onClick={()=>setCarrito([])} >
+                      <DeleteIcon />
+                    </Button>
+                  </Box>
+                  <Typography
+                    variant="h5"
+                    component="div"
+                    sx={{ textAlign: "center" }}
+                  >
+                    {carrito[0].nombre || ""}
                   </Typography>
-                  <Typography variant="h5" component="div">
-                    G
-                  </Typography>
-                  <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-                    adjective
-                  </Typography>
-                  <Typography variant="body2">
-                    well meaning and kindly.
+                  <Box
+                    sx={{
+                      width: "150px",
+                      height: "150px",
+                      display: "flex",
+                      marginLeft:"50px",
+                      justifyItems: "center",
+                    }}
+                  >
+                    <img
+                      src={carrito[0].imagen || ""}
+                      alt="televisor"
+                    />
+                  </Box>
+                  <Typography variant="body2" sx={{ textAlign: "center" }}>
+                    Precio
                     <br />
-                    {'"a benevolent smile"'}
+                    {"$" + carrito[0].precio || ""}
                   </Typography>
                 </CardContent>
-                <CardActions>
-                  <Button size="small">Learn More</Button>
+                <CardActions sx={{ justifyContent: "center" }}>
+                  <Button size="small" sx={{ color: "red" }} onClick={()=>carrito[0].cantidad=carrito[0].cantidad-1} >
+                    <RemoveIcon />
+                  </Button>
+                  <Box
+                    sx={{ display: "flex", alignItems: "center", marginX: 1 }}
+                  >
+                    <Typography>{carrito[0].cantidad}</Typography>
+                  </Box>
+                  <Button size="small" sx={{ color: "green" }} onClick={()=>carrito[0].cantidad=carrito[0].cantidad+1}>
+                    <AddIcon />
+                  </Button>
                 </CardActions>
-              </Card>
+              </Card>)}              
+              <Box
+                sx={{
+                  display: "block",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  marginTop: "16px",
+                }}
+              >
+                <h2>{ carrito.length>0 && "Total $"+ (carrito[0].cantidad * carrito[0].precio)}</h2>
+                { carrito.length>0 && <Button sx={{ borderRadius: "10px", backgroundColor:"yellow" }}>Comprar</Button>}
+              </Box>
             </Box>
           </>
         )}

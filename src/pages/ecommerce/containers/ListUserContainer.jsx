@@ -67,6 +67,7 @@ const ListUserContainer = () => {
   );
 
   const handleUpdate = ({ values, table }) => {
+    console.log(values);
     const { id } = values;
     actualizarUsuario(id, values)
       .then(() => {
