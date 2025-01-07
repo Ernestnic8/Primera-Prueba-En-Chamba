@@ -28,7 +28,7 @@ import Swal from "sweetalert2";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
-const car={
+const car = {
   id: 0,
   nombre: "",
   precio: 0,
@@ -220,9 +220,9 @@ const ListProductContainer = () => {
 
 
 
-        
+
       </div>
-      
+
       <div style={{ position: "fixed", bottom: "0%", right: "0%" }}>
         <Box sx={{ m: 1 }}>
           <Fab color="primary" aria-label="add">
@@ -235,46 +235,67 @@ const ListProductContainer = () => {
 
       <div>
         {open && (
-          <Box
-            sx={{
-              display: "flex",
-              mx: "2px",
-              transform: "scale(1)",
-              right: "0",
-              top: "0",
-              position: "fixed",
-              height: "100%",
-              backgroundColor: "rgba(39, 39, 39, 0.5)",
-              paddingLeft: "76%",
-            }}
-          >
-            <Card open={open} onClose={handleOpen} variant="outlined">
-              <h1>Carrito de compras</h1>
-              <Button onClick={handleOpen}>Cerrar</Button>
-              <CardContent>
-                <Typography
-                  gutterBottom
-                  sx={{ color: "text.secondary", fontSize: 14 }}
-                >
-                  Word of the Day
-                </Typography>
-                <Typography variant="h5" component="div">
-                  G
-                </Typography>
-                <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-                  adjective
-                </Typography>
-                <Typography variant="body2">
-                  well meaning and kindly.
-                  <br />
-                  {'"a benevolent smile"'}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button size="small">Learn More</Button>
-              </CardActions>
-            </Card>
-          </Box>
+          <>
+            {/* Fondo oscuro que cubre toda la pantalla */}
+            <Box
+              sx={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                backgroundColor: "rgba(0, 0, 0, 0.5)", // Oscurecer fondo
+                zIndex: 999, // Debajo del sidebar
+                pointerEvents: "auto", // Captura los clics para evitar interacción con otros elementos
+              }}
+              onClick={handleOpen} // Cerrar el sidebar si se hace clic fuera
+            />
+
+            {/* Sidebar */}
+            <Box
+              sx={{
+                position: "fixed",
+                top: 0,
+                right: 0,
+                width: "300px", // Anchura fija del sidebar
+                height: "100%",
+                backgroundColor: "#fff", // Fondo del sidebar
+                zIndex: 1000, // Por encima del fondo
+                boxShadow: "-2px 0 5px rgba(0, 0, 0, 0.5)", // Sombra para dar profundidad
+                overflowY: "auto",
+                padding: "16px",
+              }}
+            >
+              <Card open={open} onClose={handleOpen} variant="outlined">
+                <h1>Carrito de compras</h1>
+                <Button onClick={handleOpen} sx={{ marginBottom: "16px" }}>
+                  Cerrar
+                </Button>
+                <CardContent>
+                  <Typography
+                    gutterBottom
+                    sx={{ color: "text.secondary", fontSize: 14 }}
+                  >
+                    Word of the Day
+                  </Typography>
+                  <Typography variant="h5" component="div">
+                    G
+                  </Typography>
+                  <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
+                    adjective
+                  </Typography>
+                  <Typography variant="body2">
+                    well meaning and kindly.
+                    <br />
+                    {'"a benevolent smile"'}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small">Learn More</Button>
+                </CardActions>
+              </Card>
+            </Box>
+          </>
         )}
       </div>
     </>
