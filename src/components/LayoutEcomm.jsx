@@ -7,13 +7,13 @@ const LayoutEcomm = () => {
 
        <nav>
         <ul className="nav-container">
-          <li>
+          <li className="li">
             <Link to="/ecommerce/productos">Productos</Link>
           </li>
-          <li>
+          <li className="li">
             <Link to="/ecommerce/usuario">Usuarios</Link>
           </li>
-          <li className="active">
+          <li className="li active">
             <Link to="/">Cerrar sesion</Link>
           </li>
         </ul>

@@ -83,10 +83,15 @@ const ListProductContainer = ({ usuario }) => {
       head: [columns],
       body: rows,
     });
-    doc.text(`Total: $${total}`, 170, 250);
+    doc.text(`Total: $${total}`, 170, 200);
     const iva = total * 0.15;
-    doc.text(`IVA: $${iva.toFixed(2)}`, 170, 260);
-    doc.text(`Total a pagar: $${(total + iva).toFixed(2)}`, 150, 270);
+    doc.text(`IVA: $${iva.toFixed(2)}`, 170, 210);
+    doc.text(`Total a pagar: $${(total + iva).toFixed(2)}`, 150, 220);
+    doc.text("___________________________", 10, 260)
+    doc.text("        Entregue", 15, 270)
+    doc.text("___________________________", 143, 260)
+    doc.text("        Recibí", 160, 270)
+    doc.text("Gracias por su compra", 90, 275);
     doc.save(`factura_${numFactura}.pdf`);
     setContar(contar + 1);
   };
@@ -468,14 +473,14 @@ const ListProductContainer = ({ usuario }) => {
                       </Typography>
                       <Box
                         sx={{
-                          width: "150px",
-                          height: "150px",
+                          width: "125px",
+                          height: "125px",
                           display: "flex",
                           marginLeft: "50px",
                           justifyItems: "center",
                         }}
                       >
-                        <img src={producto.imagen} alt={producto.nombre} />
+                        <img src={producto.imagen} alt={producto.nombre} style={{width:"100%", height:"100%"}} />
                       </Box>
                       <Typography variant="body2" sx={{ textAlign: "center" }}>
                         Precio: ${producto.precio}
