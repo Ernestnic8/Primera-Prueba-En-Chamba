@@ -13,6 +13,9 @@ const Layout = () => {
           <li>
             <Link to="/fakeapi/users">Usuarios</Link>
           </li>
+          <li className="active">
+            <Link to="/">Cerrar sesion</Link>
+          </li>
         </ul>
       </nav>
     </header>

@@ -11,7 +11,7 @@ const ListProductPage = ({usuario}) => {
 }
 
 ListProductPage.propTypes = {
-  usuario: propTypes.array,
+  usuario: propTypes.func,
 };
 
 export default ListProductPage

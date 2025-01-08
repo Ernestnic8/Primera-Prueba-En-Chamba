@@ -31,7 +31,9 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const ListProductContainer = ({ usuario }) => {
   const [data, setData] = useState([]);
@@ -338,32 +340,31 @@ const ListProductContainer = ({ usuario }) => {
         </Tooltip>
       </Box>
     ),
+    renderTopToolbarCustomActions: () => (
+      <Box sx={{ display: "flex", gap: "1.5rem", paddingLeft: "1rem" }}>
+        <Tooltip title="Actualizar" onClick={handleCarga}>
+          <IconButton>
+            <RefreshIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip
+          title="Agregar Producto"
+          onClick={() => {
+            nav("/ecommerce/producto/registro");
+          }}
+        >
+          <IconButton>
+            <AddIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    ),
   });
 
   return (
     <>
       <div className="container">
-        <h1>Lista de productos</h1>
-        <div>
-          <button
-            className="boton"
-            onClick={() => {
-              nav("/ecommerce/producto/registro");
-            }}
-          >
-            Agregar Producto
-          </button>
-        </div>
-        <div>
-          <button
-            className="boton"
-            onClick={() => {
-              handleCarga();
-            }}
-          >
-            Actualizar
-          </button>
-        </div>
+        <h1>Lista de productos</h1>        
         <div className="table">
           <MaterialReactTable table={table} />
         </div>
@@ -384,7 +385,6 @@ const ListProductContainer = ({ usuario }) => {
       <div>
         {open && (
           <>
-            {/* Fondo oscuro que cubre toda la pantalla */}
             <Box
               sx={{
                 position: "fixed",
@@ -546,7 +546,7 @@ const ListProductContainer = ({ usuario }) => {
 };
 
 ListProductContainer.propTypes = {
-  usuario: propTypes.array,
+  usuario: propTypes.func,
 };
 
 export default ListProductContainer;

@@ -13,6 +13,9 @@ const LayoutEcomm = () => {
           <li>
             <Link to="/ecommerce/usuario">Usuarios</Link>
           </li>
+          <li className="active">
+            <Link to="/">Cerrar sesion</Link>
+          </li>
         </ul>
       </nav>
     </header>

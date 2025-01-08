@@ -91,7 +91,7 @@ const Login = ({setIsLogged, Usuario}) => {
 
 Login.propTypes = {
   setIsLogged: propTypes.func,
-  Usuario: propTypes.array,
+  Usuario: propTypes.func,
 };
 
 export default Login;
