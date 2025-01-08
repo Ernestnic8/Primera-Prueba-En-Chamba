@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import propTypes from "prop-types";
 import Swal from "sweetalert2";
 
-const Login = ({setIsLogged}) => {
+const Login = ({setIsLogged, Usuario}) => {
   const [user, setUser] = useState([]);
   var usuario = [];
   const nav = useNavigate();
@@ -23,6 +23,7 @@ const Login = ({setIsLogged}) => {
       });
     } else {
       if (usuario.pass === data.pass) {
+        Usuario((us) => [...us,{ nombre: usuario.nombre + " " + usuario.apellido}]);
         setIsLogged(true);
         usuario = [];
         nav("/ecommerce/productos");
@@ -90,6 +91,7 @@ const Login = ({setIsLogged}) => {
 
 Login.propTypes = {
   setIsLogged: propTypes.func,
+  Usuario: propTypes.array,
 };
 
 export default Login;

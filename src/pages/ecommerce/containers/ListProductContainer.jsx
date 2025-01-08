@@ -22,6 +22,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import propTypes from "prop-types";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
@@ -30,15 +31,63 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { jsPDF } from "jspdf";
 
-
-const ListProductContainer = () => {
+const ListProductContainer = ({ usuario }) => {
   const [data, setData] = useState([]);
   const [categories, setCategories] = useState([]);
   const [open, setOpen] = useState(false);
   const [carrito, setCarrito] = useState([]);
   const [total, setTotal] = useState(0);
   const nav = useNavigate();
+  const doc = new jsPDF({ format: "letter" });
+  const [numFactura, setNumFactura] = useState(0);
+  const [contar, setContar] = useState(0);
+
+  const handleNumFactura = () => {
+    setNumFactura(Math.floor(Math.random() * 100000));
+  };
+
+  const handlePDF = () => {
+    doc.setFontSize(15);
+    doc.text("Factura", 100, 25);
+    doc.setFontSize(12);
+    doc.text(
+      `Numero de factura: 
+         ${numFactura}`,
+      160,
+      10
+    );
+    doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 160, 30);
+    doc.text(`Cliente: ${usuario[0].nombre}`, 15, 45);
+    doc.addImage(
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkNvExoAaAOrIviLs7Je6My2vBwCb1a07JwA&s",
+      10,
+      5,
+      45,
+      30
+    );
+    const columns = ["Producto", "Precio", "Cantidad", "Total"];
+
+    const rows = carrito.map((producto) => [
+      producto.nombre,
+      producto.precio,
+      producto.cantidad,
+      producto.precio * producto.cantidad,
+    ]);
+
+    doc.autoTable({
+      startY: 55,
+      head: [columns],
+      body: rows,
+    });
+    doc.text(`Total: $${total}`, 170, 250);
+    const iva = total * 0.15;
+    doc.text(`IVA: $${iva.toFixed(2)}`, 170, 260);
+    doc.text(`Total a pagar: $${(total + iva).toFixed(2)}`, 150, 270);
+    doc.save(`factura_${numFactura}.pdf`);
+    setContar(contar + 1);
+  };
 
   const handleOpen = () => {
     setOpen(!open);
@@ -47,14 +96,18 @@ const ListProductContainer = () => {
   const handleTotal = () => {
     let total = 0;
     carrito.map((producto) => {
-      total = total + (producto.cantidad * producto.precio);
+      total = total + producto.cantidad * producto.precio;
     });
-    setTotal(total);
-  }
+    setTotal(Number(total.toFixed(2)));
+  };
 
   useEffect(() => {
     handleTotal();
   }, [carrito]);
+
+  useEffect(() => {
+    handleNumFactura();
+  }, [contar]);
 
   const handleCarga = () => {
     categoriasApi().then((res) => {
@@ -78,18 +131,48 @@ const ListProductContainer = () => {
           item.id === id ? { ...item, cantidad: item.cantidad + 1 } : item
         );
       }
-      return [...prevCarrito, { id, nombre: titulo, precio, cantidad: 1, imagen }];
+      return [
+        ...prevCarrito,
+        { id, nombre: titulo, precio, cantidad: 1, imagen },
+      ];
     });
   };
 
   const handleRemoveFromCart = (id) => {
-    setCarrito((prevCarrito) =>
-      prevCarrito.filter((producto) => producto.id !== id)
-    );
+    Swal.fire({
+      title: "¿Estas seguro?",
+      text: "Quitaras este producto del carrito de compra",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "red",
+      cancelButtonColor: "green",
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setCarrito((prevCarrito) =>
+          prevCarrito.filter((item) => item.id !== id)
+        );
+      }
+    });
   };
 
   const handleEmptyCart = () => {
-    setCarrito([]);
+    Swal.fire({
+      title: "¿Estas seguro?",
+      text: "Limpiaras todo el carrito de compra",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "red",
+      cancelButtonColor: "green",
+      confirmButtonText: "Vaciar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setCarrito([]);
+        setTotal(0);
+      }
+    });
   };
 
   const handleIncrementQuantity = (id) => {
@@ -101,17 +184,17 @@ const ListProductContainer = () => {
   };
 
   const handleDecrementQuantity = (id) => {
-    setCarrito((prevCarrito) =>
-      prevCarrito
-        .map((item) =>
-          item.id === id
-            ? { ...item, cantidad: item.cantidad > 1 ? item.cantidad - 1 : 1 }
-            : item
-        )
-        .filter((item) => item.cantidad > 0) // Remover si la cantidad llega a 0
+    setCarrito(
+      (prevCarrito) =>
+        prevCarrito
+          .map((item) =>
+            item.id === id
+              ? { ...item, cantidad: item.cantidad > 1 ? item.cantidad - 1 : 1 }
+              : item
+          )
+          .filter((item) => item.cantidad > 0) // Remover si la cantidad llega a 0
     );
   };
-
 
   const handleUpdate = ({ values, table }) => {
     const { id } = values;
@@ -226,7 +309,7 @@ const ListProductContainer = () => {
             />
           );
         },
-      }
+      },
     ],
     [categories]
   );
@@ -286,9 +369,10 @@ const ListProductContainer = () => {
         </div>
       </div>
 
-      <div style={{ position: "fixed", bottom: "4%", right: "0%", zIndex: 1000 }}>
-        <Box sx={{ m: 1 }} onClick={handleOpen}
-        >
+      <div
+        style={{ position: "fixed", bottom: "4%", right: "0%", zIndex: 1000 }}
+      >
+        <Box sx={{ m: 1 }} onClick={handleOpen}>
           <Fab color="primary" aria-label="add">
             <Badge badgeContent={carrito.length} color="warning">
               <ShoppingCartIcon />
@@ -342,7 +426,11 @@ const ListProductContainer = () => {
                 <CloseIcon />
               </Button>
               <div>
-                <Typography variant="h5" component="div" sx={{ textAlign: "center" }}>
+                <Typography
+                  variant="h5"
+                  component="div"
+                  sx={{ textAlign: "center" }}
+                >
                   Carrito de compra
                 </Typography>
               </div>
@@ -426,6 +514,7 @@ const ListProductContainer = () => {
                     justifyContent: "center",
                     textAlign: "center",
                     marginTop: "16px",
+                    paddingBottom: "1.5rem",
                   }}
                 >
                   <h2>Total: ${total}</h2>
@@ -434,6 +523,7 @@ const ListProductContainer = () => {
                     color="primary"
                     fullWidth
                     sx={{ marginBottom: "8px" }}
+                    onClick={handlePDF}
                   >
                     Comprar
                   </Button>
@@ -453,6 +543,10 @@ const ListProductContainer = () => {
       </div>
     </>
   );
+};
+
+ListProductContainer.propTypes = {
+  usuario: propTypes.array,
 };
 
 export default ListProductContainer;

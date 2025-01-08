@@ -9,6 +9,7 @@ import LayoutEcomm from "../components/LayoutEcomm";
 
 const Ecommerce = () => {
   const [isLogged, setIsLogged] = useState(false);
+  const [user, setUser] = useState([]);
   return (
     <>
       <Routes>
@@ -16,7 +17,7 @@ const Ecommerce = () => {
           path="*"
           element={<h1 className="not-found">Error 401 Not Found</h1>}
         />
-        <Route index path="/" element={<Login setIsLogged={setIsLogged} />} />
+        <Route index path="/" element={<Login setIsLogged={setIsLogged} Usuario={setUser} />} />
         <Route path="/registro" element={<RegistroUsuarioPage />} />
         <Route
           path="/productos"
@@ -24,7 +25,7 @@ const Ecommerce = () => {
             isLogged ? (
               <>
                 <LayoutEcomm />
-                <ListProductPage />
+                <ListProductPage usuario={user} />
               </>
             ) : (
               <Navigate to="/" />
