@@ -44,10 +44,10 @@ const ListProductContainer = () => {
     setOpen(!open);
   };
 
-  const handleTotal =()=>{
-    let total=0;
+  const handleTotal = () => {
+    let total = 0;
     carrito.map((producto) => {
-      total=total+(producto.cantidad * producto.precio);
+      total = total + (producto.cantidad * producto.precio);
     });
     setTotal(total);
   }
@@ -69,12 +69,49 @@ const ListProductContainer = () => {
     handleCarga();
   }, []);
 
-  const handleAddCart=(producto)=>{
-    const {titulo,precio,imagen, id} = producto;
-    console.log(producto);
-    setCarrito([...carrito,{id:id,nombre:titulo,precio:precio,cantidad:1,imagen:imagen}]);
-    console.log(carrito);
-  }
+  const handleAddCart = (producto) => {
+    const { id, titulo, precio, imagen } = producto;
+    setCarrito((prevCarrito) => {
+      const existeProducto = prevCarrito.find((item) => item.id === id);
+      if (existeProducto) {
+        return prevCarrito.map((item) =>
+          item.id === id ? { ...item, cantidad: item.cantidad + 1 } : item
+        );
+      }
+      return [...prevCarrito, { id, nombre: titulo, precio, cantidad: 1, imagen }];
+    });
+  };
+
+  const handleRemoveFromCart = (id) => {
+    setCarrito((prevCarrito) =>
+      prevCarrito.filter((producto) => producto.id !== id)
+    );
+  };
+
+  const handleEmptyCart = () => {
+    setCarrito([]);
+  };
+
+  const handleIncrementQuantity = (id) => {
+    setCarrito((prevCarrito) =>
+      prevCarrito.map((item) =>
+        item.id === id ? { ...item, cantidad: item.cantidad + 1 } : item
+      )
+    );
+  };
+
+  const handleDecrementQuantity = (id) => {
+    setCarrito((prevCarrito) =>
+      prevCarrito
+        .map((item) =>
+          item.id === id
+            ? { ...item, cantidad: item.cantidad > 1 ? item.cantidad - 1 : 1 }
+            : item
+        )
+        .filter((item) => item.cantidad > 0) // Remover si la cantidad llega a 0
+    );
+  };
+
 
   const handleUpdate = ({ values, table }) => {
     const { id } = values;
@@ -251,7 +288,7 @@ const ListProductContainer = () => {
 
       <div style={{ position: "fixed", bottom: "4%", right: "0%", zIndex: 1000 }}>
         <Box sx={{ m: 1 }} onClick={handleOpen}
-          >
+        >
           <Fab color="primary" aria-label="add">
             <Badge badgeContent={carrito.length} color="warning">
               <ShoppingCartIcon />
@@ -309,85 +346,107 @@ const ListProductContainer = () => {
                   Carrito de compra
                 </Typography>
               </div>
-              {carrito.length===0 && <Typography variant="h5" component="div" sx={{ textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "50%", color:"grey" }}>
-                No hay productos en el carrito
-              </Typography>}
-              {carrito.length>0 && 
-                carrito.map((producto) => 
-                  (<Card key={producto.id}
-                    open={open}
-                    onClose={handleOpen}
+              {carrito.length === 0 && (
+                <Typography
+                  variant="h5"
+                  component="div"
+                  sx={{
+                    textAlign: "center",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "50%",
+                    color: "grey",
+                  }}
+                >
+                  No hay productos en el carrito
+                </Typography>
+              )}
+              {carrito.length > 0 &&
+                carrito.map((producto) => (
+                  <Card
+                    key={producto.id}
                     variant="outlined"
                     sx={{ marginTop: "18px" }}
                   >
                     <CardContent>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          top: "12",
-                          right: "0",
-                          position: "absolute",
-                        }}
-                      >
-                        <Button sx={{ color: "red" }} onClick={()=>setCarrito([])} >
-                          <DeleteIcon />
-                        </Button>
-                      </Box>
                       <Typography
                         variant="h5"
                         component="div"
                         sx={{ textAlign: "center" }}
                       >
-                        {producto.nombre || ""}
+                        {producto.nombre}
                       </Typography>
                       <Box
                         sx={{
                           width: "150px",
                           height: "150px",
                           display: "flex",
-                          marginLeft:"50px",
+                          marginLeft: "50px",
                           justifyItems: "center",
                         }}
                       >
-                        <img
-                          src={producto.imagen || ""}
-                          alt="televisor"
-                        />
+                        <img src={producto.imagen} alt={producto.nombre} />
                       </Box>
                       <Typography variant="body2" sx={{ textAlign: "center" }}>
-                        Precio
-                        <br />
-                        {"$" + producto.precio || ""}
+                        Precio: ${producto.precio}
                       </Typography>
                     </CardContent>
                     <CardActions sx={{ justifyContent: "center" }}>
-                      <Button size="small" sx={{ color: "red" }} onClick={()=>producto.cantidad=producto.cantidad-1} >
+                      <Button
+                        size="small"
+                        sx={{ color: "red" }}
+                        onClick={() => handleDecrementQuantity(producto.id)}
+                      >
                         <RemoveIcon />
                       </Button>
-                      <Box
-                        sx={{ display: "flex", alignItems: "center", marginX: 1 }}
+                      <Typography>{producto.cantidad}</Typography>
+                      <Button
+                        size="small"
+                        sx={{ color: "green" }}
+                        onClick={() => handleIncrementQuantity(producto.id)}
                       >
-                        <Typography>{carrito[0].cantidad}</Typography>
-                      </Box>
-                      <Button size="small" sx={{ color: "green" }} onClick={()=>producto.cantidad=producto.cantidad+1}>
                         <AddIcon />
                       </Button>
+                      <Button
+                        size="small"
+                        sx={{ color: "red" }}
+                        onClick={() => handleRemoveFromCart(producto.id)}
+                      >
+                        <DeleteIcon />
+                      </Button>
                     </CardActions>
-                  </Card>)
-                
-                )
-              }              
-              <Box
-                sx={{
-                  display: "block",
-                  justifyContent: "center",
-                  textAlign: "center",
-                  marginTop: "16px",
-                }}
-              >
-                <h2>{ carrito.length>0 && "Total $"+ total}</h2>
-                { carrito.length>0 && <Button sx={{ borderRadius: "10px", backgroundColor:"yellow" }}>Comprar</Button>}
-              </Box>
+                  </Card>
+                ))}
+              {carrito.length > 0 && (
+                <Box
+                  sx={{
+                    display: "block",
+                    justifyContent: "center",
+                    textAlign: "center",
+                    marginTop: "16px",
+                  }}
+                >
+                  <h2>Total: ${total}</h2>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    sx={{ marginBottom: "8px" }}
+                  >
+                    Comprar
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    fullWidth
+                    onClick={handleEmptyCart}
+                  >
+                    Vaciar Carrito
+                  </Button>
+                </Box>
+              )}
             </Box>
           </>
         )}
