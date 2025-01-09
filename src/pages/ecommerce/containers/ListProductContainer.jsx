@@ -143,10 +143,10 @@ const ListProductContainer = ({ usuario }) => {
     const iva = total * 0.15;
     doc.text(`IVA: $${iva.toFixed(2)}`, 170, 210);
     doc.text(`Total a pagar: $${(total + iva).toFixed(2)}`, 150, 220);
-    doc.text("___________________________", 10, 260)
-    doc.text("        Entregue", 15, 270)
-    doc.text("___________________________", 143, 260)
-    doc.text("        Recibí", 160, 270)
+    doc.text("___________________________", 10, 260);
+    doc.text("        Entregue", 15, 270);
+    doc.text("___________________________", 143, 260);
+    doc.text("        Recibí", 160, 270);
     doc.text("Gracias por su compra", 90, 275);
     doc.save(`factura_${numFactura}.pdf`);
     setContar(contar + 1);
@@ -319,61 +319,131 @@ const ListProductContainer = ({ usuario }) => {
           });
       }
     });
-  };  
+  };
 
-  const table = useMaterialReactTable({
-    columns,
-    data,
-    enableEditing: true,
-    onEditingRowSave: handleUpdate,
-    renderRowActions: ({ row, table }) => (
-      <Box sx={{ display: "flex", gap: "1rem" }}>
-        <Tooltip title="Edit" onClick={() => table.setEditingRow(row)}>
-          <IconButton>
-            <EditIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Delete" onClick={() => handleDelete(row)}>
-          <IconButton color="error">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="AddCarrito" onClick={() => handleAddCart(row.original)}>
-          <IconButton color="success">
-            <AddShoppingCartIcon />
-          </IconButton>
-        </Tooltip>
-      </Box>
-    ),
-    renderTopToolbarCustomActions: () => (
-      <Box sx={{ display: "flex", gap: "1.5rem", paddingLeft: "1rem" }}>
-        <Tooltip title="Actualizar" onClick={handleCarga}>
-          <IconButton>
-            <RefreshIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip
-          title="Agregar Producto"
-          onClick={() => {
-            nav("/ecommerce/producto/registro");
-          }}
-        >
-          <IconButton>
-            <AddIcon />
-          </IconButton>
-        </Tooltip>
-      </Box>
-    ),
-  });
+  // const table = useMaterialReactTable({
+  //   columns,
+  //   data,
+  //   enableEditing: true,
+  //   onEditingRowSave: handleUpdate,
+  //   renderRowActions: ({ row, table }) => (
+  //     <Box sx={{ display: "flex", gap: "1rem" }}>
+  //       <Tooltip title="Edit" onClick={() => table.setEditingRow(row)}>
+  //         <IconButton>
+  //           <EditIcon />
+  //         </IconButton>
+  //       </Tooltip>
+  //       <Tooltip title="Delete" onClick={() => handleDelete(row)}>
+  //         <IconButton color="error">
+  //           <DeleteIcon />
+  //         </IconButton>
+  //       </Tooltip>
+  //       <Tooltip title="AddCarrito" onClick={() => handleAddCart(row.original)}>
+  //         <IconButton color="success">
+  //           <AddShoppingCartIcon />
+  //         </IconButton>
+  //       </Tooltip>
+  //     </Box>
+  //   ),
+  //   renderTopToolbarCustomActions: () => (
+  //     <Box sx={{ display: "flex", gap: "1.5rem", paddingLeft: "1rem" }}>
+  //       <Tooltip title="Actualizar" onClick={handleCarga}>
+  //         <IconButton>
+  //           <RefreshIcon />
+  //         </IconButton>
+  //       </Tooltip>
+  //       <Tooltip
+  //         title="Agregar Producto"
+  //         onClick={() => {
+  //           nav("/ecommerce/producto/registro");
+  //         }}
+  //       >
+  //         <IconButton>
+  //           <AddIcon />
+  //         </IconButton>
+  //       </Tooltip>
+  //     </Box>
+  //   ),
+  // });
 
   return (
     <>
-      <div className="container">
+      {/* <div className="container">
         <h1>Lista de productos</h1>        
         <div className="table">
           <MaterialReactTable table={table} />
         </div>
-      </div>
+      </div> */}
+
+      <Box
+        sx={{
+          width: "500",
+          display: "block",
+          justifyContent: "space-around",
+
+        }}
+      >
+        {data.length > 0 &&
+          data.map((producto) => (
+            <Card
+              key={producto.id}
+              variant="outlined"
+              sx={{ marginTop: "18px", width: "max-content" }}
+            >
+              <CardContent>
+                <Typography
+                  variant="h5"
+                  component="div"
+                  sx={{ textAlign: "center" }}
+                >
+                  {producto.nombre}
+                </Typography>
+                <Box
+                  sx={{
+                    width: "125px",
+                    height: "125px",
+                    display: "flex",
+                    marginLeft: "50px",
+                    justifyItems: "center",
+                  }}
+                >
+                  <img
+                    src={producto.imagen}
+                    alt={producto.nombre}
+                    style={{ width: "100%", height: "100%" }}
+                  />
+                </Box>
+                <Typography variant="body2" sx={{ textAlign: "center" }}>
+                  Precio: ${producto.precio}
+                </Typography>
+              </CardContent>
+              <CardActions sx={{ justifyContent: "center" }}>
+                <Button
+                  size="small"
+                  sx={{ color: "red" }}
+                  onClick={() => handleDecrementQuantity(producto.id)}
+                >
+                  <RemoveIcon />
+                </Button>
+                <Typography>{producto.cantidad}</Typography>
+                <Button
+                  size="small"
+                  sx={{ color: "green" }}
+                  onClick={() => handleIncrementQuantity(producto.id)}
+                >
+                  <AddIcon />
+                </Button>
+                <Button
+                  size="small"
+                  sx={{ color: "red" }}
+                  onClick={() => handleRemoveFromCart(producto.id)}
+                >
+                  <DeleteIcon />
+                </Button>
+              </CardActions>
+            </Card>
+          ))}
+      </Box>
 
       <div
         style={{ position: "fixed", bottom: "4%", right: "0%", zIndex: 1000 }}
@@ -480,7 +550,11 @@ const ListProductContainer = ({ usuario }) => {
                           justifyItems: "center",
                         }}
                       >
-                        <img src={producto.imagen} alt={producto.nombre} style={{width:"100%", height:"100%"}} />
+                        <img
+                          src={producto.imagen}
+                          alt={producto.nombre}
+                          style={{ width: "100%", height: "100%" }}
+                        />
                       </Box>
                       <Typography variant="body2" sx={{ textAlign: "center" }}>
                         Precio: ${producto.precio}
