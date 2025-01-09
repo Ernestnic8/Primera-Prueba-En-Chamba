@@ -7,13 +7,13 @@ const Layout = () => {
 
        <nav>
         <ul className="nav-container">
-          <li>
+          <li className="li">
             <Link to="/fakeapi/home">Productos</Link>
           </li>
-          <li>
+          <li className="li">
             <Link to="/fakeapi/users">Usuarios</Link>
           </li>
-          <li className="active">
+          <li className="li active">
             <Link to="/">Cerrar sesion</Link>
           </li>
         </ul>

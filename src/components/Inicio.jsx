@@ -1,14 +1,16 @@
-import { useNavigate } from "react-router-dom"
+import "../App.css";
+import LayoutInicio from "./LayoutInicio";
+
 const Inicio = () => {
-    const nav = useNavigate()
 
   return (
-    <div className="inicio">
-      <button className="boton" onClick={()=>nav("/fakeapi")} >FakeApi</button>
-      <button className="boton" onClick={()=>nav("ecommerce")} >Ecommerce</button>
-    </div>
-  )
-}
+    <>
+      <LayoutInicio/>
+      <div className="inicio" >
+        <h1>Bienvenido al sistema</h1>
+      </div>
+    </>
+  );
+};
 
-
-export default Inicio
+export default Inicio;

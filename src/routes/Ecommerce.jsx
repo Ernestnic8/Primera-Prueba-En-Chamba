@@ -6,6 +6,7 @@ import ListProductPage from "../pages/ecommerce/pages/ListProductPage";
 import RegistroUsuarioPage from "../pages/ecommerce/pages/RegistroUsuarioPage";
 import RegistroProductoPage from "../pages/ecommerce/pages/RegistroProductoPage";
 import LayoutEcomm from "../components/LayoutEcomm";
+import LayoutInicio from "../components/LayoutInicio";
 
 const Ecommerce = () => {
   const [isLogged, setIsLogged] = useState(false);
@@ -17,7 +18,16 @@ const Ecommerce = () => {
           path="*"
           element={<h1 className="not-found">Error 401 Not Found</h1>}
         />
-        <Route index path="/" element={<Login setIsLogged={setIsLogged} Usuario={setUser} />} />
+        <Route
+          index
+          path="/"
+          element={
+            <>
+              <LayoutInicio/>
+              <Login setIsLogged={setIsLogged} Usuario={setUser} />{" "}
+            </>
+          }
+        />
         <Route path="/registro" element={<RegistroUsuarioPage />} />
         <Route
           path="/productos"
@@ -37,8 +47,7 @@ const Ecommerce = () => {
           element={
             isLogged ? (
               <>
-                <LayoutEcomm />{" "}
-                <RegistroProductoPage />
+                <LayoutEcomm /> <RegistroProductoPage />
               </>
             ) : (
               <Navigate to="/" />
@@ -51,8 +60,7 @@ const Ecommerce = () => {
             isLogged ? (
               <>
                 {" "}
-                <LayoutEcomm />{" "}
-                <ListUserPages />{" "}
+                <LayoutEcomm /> <ListUserPages />{" "}
               </>
             ) : (
               <Navigate to="/" />
