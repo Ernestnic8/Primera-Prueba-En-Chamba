@@ -4,15 +4,15 @@ const LayoutInicio = () => {
   return (
     <div>
       <nav>
-        <ul className="nav-container">
-          <li className="li">
-            <Link to="/" >Inicio</Link>
-          </li>
-          <li className="li">
+        <ul className="nav-container1">
+          <li className="li1">
             <Link to="/fakeapi" >Platzi</Link>
           </li>
-          <li className="li active">
+          <li className="li1">
             <Link to={"/ecommerce"} >Ecommerce</Link>
+          </li>
+          <li className="li1">
+            <Link to="/" >Inicio</Link>
           </li>
         </ul>
       </nav>

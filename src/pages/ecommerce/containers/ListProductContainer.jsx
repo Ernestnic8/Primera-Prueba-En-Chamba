@@ -46,6 +46,62 @@ const ListProductContainer = ({ usuario }) => {
   const [numFactura, setNumFactura] = useState(0);
   const [contar, setContar] = useState(0);
 
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: "id", //access nested data with dot notation
+        header: "ID",
+        enableEditing: false,
+        size: 50,
+      },
+      {
+        accessorKey: "titulo", //access nested data with dot notation
+        header: "Titulo",
+        size: 150,
+      },
+      {
+        accessorKey: "categoriaId",
+        header: "Categoria",
+        size: 150,
+        enableEditing: false,
+        Cell: ({ cell }) => {
+          return (
+            <span>
+              {categories.map((category) => {
+                if (category.id === cell.row.original.categoriaId) {
+                  return category.nombre;
+                }
+              })}
+            </span>
+          );
+        },
+      },
+      {
+        accessorKey: "precio",
+        header: "Precio",
+        size: 150,
+        Cell: ({ cell }) => {
+          return <span>{`$${cell.row.original.precio}`}</span>;
+        },
+      },
+      {
+        accessorKey: "imagen",
+        header: "Imagen",
+        size: 150,
+        Cell: ({ cell }) => {
+          return (
+            <img
+              src={cell.row.original.imagen}
+              alt={cell.row.original.titulo}
+              style={{ width: "100px", height: "100px" }}
+            />
+          );
+        },
+      },
+    ],
+    [categories]
+  );
+
   const handleNumFactura = () => {
     setNumFactura(Math.floor(Math.random() * 100000));
   };
@@ -263,63 +319,7 @@ const ListProductContainer = ({ usuario }) => {
           });
       }
     });
-  };
-
-  const columns = useMemo(
-    () => [
-      {
-        accessorKey: "id", //access nested data with dot notation
-        header: "ID",
-        enableEditing: false,
-        size: 50,
-      },
-      {
-        accessorKey: "titulo", //access nested data with dot notation
-        header: "Titulo",
-        size: 150,
-      },
-      {
-        accessorKey: "categoriaId",
-        header: "Categoria",
-        size: 150,
-        enableEditing: false,
-        Cell: ({ cell }) => {
-          return (
-            <span>
-              {categories.map((category) => {
-                if (category.id === cell.row.original.categoriaId) {
-                  return category.nombre;
-                }
-              })}
-            </span>
-          );
-        },
-      },
-      {
-        accessorKey: "precio",
-        header: "Precio",
-        size: 150,
-        Cell: ({ cell }) => {
-          return <span>{`$${cell.row.original.precio}`}</span>;
-        },
-      },
-      {
-        accessorKey: "imagen",
-        header: "Imagen",
-        size: 150,
-        Cell: ({ cell }) => {
-          return (
-            <img
-              src={cell.row.original.imagen}
-              alt={cell.row.original.titulo}
-              style={{ width: "100px", height: "100px" }}
-            />
-          );
-        },
-      },
-    ],
-    [categories]
-  );
+  };  
 
   const table = useMaterialReactTable({
     columns,
