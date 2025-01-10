@@ -18,6 +18,7 @@ import {
   CardActions,
   CardContent,
   Fab,
+  Grid,
   IconButton,
   Tooltip,
   Typography,
@@ -375,87 +376,120 @@ const ListProductContainer = ({ usuario }) => {
         </div>
       </div> */}
 
-      <Box
-        sx={{
-          width: "500",
-          display: "block",
-          justifyContent: "space-around",
-
-        }}
-      >
+<Box sx={{ padding: "1rem" }}>
+      <Typography variant="h4" sx={{ marginBottom: "1.5rem", textAlign: "center" }}>
+        Lista de Productos
+      </Typography>
+      <Grid container spacing={3} justifyContent="center">
         {data.length > 0 &&
           data.map((producto) => (
-            <Card
-              key={producto.id}
-              variant="outlined"
-              sx={{ marginTop: "18px", width: "max-content" }}
-            >
-              <CardContent>
-                <Typography
-                  variant="h5"
-                  component="div"
-                  sx={{ textAlign: "center" }}
-                >
-                  {producto.nombre}
-                </Typography>
-                <Box
-                  sx={{
-                    width: "125px",
-                    height: "125px",
-                    display: "flex",
-                    marginLeft: "50px",
-                    justifyItems: "center",
-                  }}
-                >
-                  <img
-                    src={producto.imagen}
-                    alt={producto.nombre}
-                    style={{ width: "100%", height: "100%" }}
-                  />
-                </Box>
-                <Typography variant="body2" sx={{ textAlign: "center" }}>
-                  Precio: ${producto.precio}
-                </Typography>
-              </CardContent>
-              <CardActions sx={{ justifyContent: "center" }}>
-                <Button
-                  size="small"
-                  sx={{ color: "red" }}
-                  onClick={() => handleDecrementQuantity(producto.id)}
-                >
-                  <RemoveIcon />
-                </Button>
-                <Typography>{producto.cantidad}</Typography>
-                <Button
-                  size="small"
-                  sx={{ color: "green" }}
-                  onClick={() => handleIncrementQuantity(producto.id)}
-                >
-                  <AddIcon />
-                </Button>
-                <Button
-                  size="small"
-                  sx={{ color: "red" }}
-                  onClick={() => handleRemoveFromCart(producto.id)}
-                >
-                  <DeleteIcon />
-                </Button>
-              </CardActions>
-            </Card>
+            <Grid item xs={12} sm={6} md={4} lg={3} key={producto.id}>
+              <Card variant="outlined" sx={{ height: "100%" }}>
+                <CardContent>
+                  <Typography
+                    variant="h5"
+                    component="div"
+                    sx={{ textAlign: "center" }}
+                  >
+                    {producto.nombre}
+                  </Typography>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      height: "200px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      margin: "1rem 0",
+                    }}
+                  >
+                    <img
+                      src={producto.imagen}
+                      alt={producto.nombre}
+                      style={{ maxWidth: "100%", maxHeight: "100%" }}
+                    />
+                  </Box>
+                  <Typography variant="body2" sx={{ textAlign: "center" }}>
+                    Precio: ${producto.precio.toFixed(2)}
+                  </Typography>
+                </CardContent>
+                <CardActions sx={{ justifyContent: "center" }}>
+                  <Button
+                    size="small"
+                    sx={{ color: "red" }}
+                    onClick={() => handleDecrementQuantity(producto.id)}
+                  >
+                    <RemoveIcon />
+                  </Button>
+                  <Typography>{producto.cantidad}</Typography>
+                  <Button
+                    size="small"
+                    sx={{ color: "green" }}
+                    onClick={() => handleIncrementQuantity(producto.id)}
+                  >
+                    <AddIcon />
+                  </Button>
+                  <Tooltip title="Agregar al carrito">
+                    <Button
+                      size="small"
+                      sx={{ color: "blue" }}
+                      onClick={() => handleAddCart(producto)}
+                    >
+                      <AddShoppingCartIcon />
+                    </Button>
+                  </Tooltip>
+                  <Button
+                    size="small"
+                    sx={{ color: "red" }}
+                    onClick={() => handleRemoveFromCart(producto.id)}
+                  >
+                    <DeleteIcon />
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
           ))}
-      </Box>
+      </Grid>
 
-      <div
-        style={{ position: "fixed", bottom: "4%", right: "0%", zIndex: 1000 }}
+      {/* Floating Cart Button */}
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: "4%",
+          right: "2%",
+          zIndex: 1000,
+        }}
       >
-        <Box sx={{ m: 1 }} onClick={handleOpen}>
-          <Fab color="primary" aria-label="add">
+        <Tooltip title="Ver Carrito">
+          <Fab color="primary" onClick={handleOpen}>
             <Badge badgeContent={carrito.length} color="warning">
               <ShoppingCartIcon />
             </Badge>
           </Fab>
-        </Box>
-      </div>
+        </Tooltip>
+      </Box>
+
+      {/* Top Toolbar */}
+      <Box
+        sx={{
+          display: "flex",
+          gap: "1.5rem",
+          padding: "1rem",
+          justifyContent: "center",
+        }}
+      >
+        <Tooltip title="Actualizar">
+          <IconButton onClick={handleCarga}>
+            <RefreshIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Agregar Producto">
+          <IconButton onClick={() => nav("/ecommerce/producto/registro")}>
+            <AddIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    </Box>
 
       <div>
         {open && (
