@@ -1,14 +1,16 @@
-import {Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../App.css";
 
 const LayoutEcomm = () => {
   return (
     <header className="header">
-
-       <nav>
+      <nav>
         <ul className="nav-container">
           <li className="li">
             <Link to="/ecommerce/productos">Productos</Link>
+          </li>
+          <li className="li">
+            <Link to="/ecommerce/producto/compra">Comprar</Link>
           </li>
           <li className="li">
             <Link to="/ecommerce/usuario">Usuarios</Link>
@@ -20,6 +22,6 @@ const LayoutEcomm = () => {
       </nav>
     </header>
   );
-}
+};
 
-export default LayoutEcomm
+export default LayoutEcomm;

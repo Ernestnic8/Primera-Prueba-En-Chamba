@@ -7,6 +7,7 @@ import RegistroUsuarioPage from "../pages/ecommerce/pages/RegistroUsuarioPage";
 import RegistroProductoPage from "../pages/ecommerce/pages/RegistroProductoPage";
 import LayoutEcomm from "../components/LayoutEcomm";
 import LayoutInicio from "../components/LayoutInicio";
+import ComprarProducto from "../pages/ecommerce/components/ComprarProducto";
 
 const Ecommerce = () => {
   const [isLogged, setIsLogged] = useState(false);
@@ -35,7 +36,7 @@ const Ecommerce = () => {
             isLogged ? (
               <>
                 <LayoutEcomm />
-                <ListProductPage usuario={user} />
+                <ListProductPage />
               </>
             ) : (
               <Navigate to="/" />
@@ -48,6 +49,18 @@ const Ecommerce = () => {
             isLogged ? (
               <>
                 <LayoutEcomm /> <RegistroProductoPage />
+              </>
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route
+          path="/producto/compra"
+          element={
+            isLogged ? (
+              <>
+                <LayoutEcomm /> <ComprarProducto usuario={user} />
               </>
             ) : (
               <Navigate to="/" />

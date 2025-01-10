@@ -1,17 +1,12 @@
 import ListProductContainer from "../containers/ListProductContainer"
-import propTypes from "prop-types";
 
 
-const ListProductPage = ({usuario}) => {
+const ListProductPage = () => {
   return (
     <div>
-      <ListProductContainer usuario={usuario} />
+      <ListProductContainer/>
     </div>
   )
 }
-
-ListProductPage.propTypes = {
-  usuario: propTypes.func,
-};
 
 export default ListProductPage
