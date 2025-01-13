@@ -29,6 +29,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { set } from "react-hook-form";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import {
+  agregarProducto,
+  actualizarCantidad,
+  eliminarProducto,
+  limpiarCarrito,
+} from "../../../redux/carritoSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const ComprarProducto = ({ usuario }) => {
   const [data, setData] = useState([]);
@@ -39,6 +46,9 @@ const ComprarProducto = ({ usuario }) => {
   const [total, setTotal] = useState(0);
   const [abrir, setAbrir] = useState(false);
   const [open, setOpen] = useState(false);
+  const [newProduct, setNewProduct] = useState([]);
+  const dispatch = useDispatch();
+  const carrt = useSelector((state) => state.carrito);
 
   const handleNumFactura = () => {
     setNumFactura(Math.floor(Math.random() * 100000));
@@ -105,7 +115,6 @@ const ComprarProducto = ({ usuario }) => {
     doc.text("        Recibí", 160, 270);
     doc.text("Gracias por su compra", 90, 275);
     doc.save(`factura_${numFactura}.pdf`);
-    //setCarrito([]);
     setContar(contar + 1);
     handleStock(carrito);
   };
@@ -183,6 +192,7 @@ const ComprarProducto = ({ usuario }) => {
           text: "Lo sentimos, no hay stock disponible",
           confirmButtonColor: "red",
         });
+    dispatch(agregarProducto({ id, nombre: titulo, precio, cantidad: 1, imagen, stock }));
   };
 
   const handleRemoveFromCart = (id) => {
@@ -200,6 +210,7 @@ const ComprarProducto = ({ usuario }) => {
         setCarrito((prevCarrito) =>
           prevCarrito.filter((item) => item.id !== id)
         );
+        dispatch(eliminarProducto(id));
       }
     });
   };
@@ -218,6 +229,7 @@ const ComprarProducto = ({ usuario }) => {
       if (result.isConfirmed) {
         setCarrito([]);
         setTotal(0);
+        dispatch(limpiarCarrito());
       }
     });
   };
@@ -235,9 +247,11 @@ const ComprarProducto = ({ usuario }) => {
           : item
       )
     );
+    dispatch(actualizarCantidad({ id, cantidad: producto.cantidad + 1 }));
   };
 
-  const handleDecrementQuantity = (id) => {
+  const handleDecrementQuantity = (producto) => {
+    const { id } = producto;
     setCarrito(
       (prevCarrito) =>
         prevCarrito
@@ -247,6 +261,12 @@ const ComprarProducto = ({ usuario }) => {
               : item
           )
           .filter((item) => item.cantidad > 0) // Remover si la cantidad llega a 0
+    );
+    dispatch(
+      actualizarCantidad({
+        id,
+        cantidad: producto.cantidad > 1 ? producto.cantidad - 1 : 1,
+      })
     );
   };
 
@@ -398,7 +418,8 @@ const ComprarProducto = ({ usuario }) => {
                   Carrito de compra
                 </Typography>
               </div>
-              {carrito.length === 0 && (
+              {console.log("carrt",carrt)}
+              {carrt.length === 0 && (
                 <Typography
                   variant="h5"
                   component="div"
