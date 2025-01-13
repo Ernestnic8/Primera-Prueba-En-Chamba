@@ -10,6 +10,7 @@ import LayoutInicio from "../components/LayoutInicio";
 
 const Ruta = () => {
   const [isLogged, setIsLogged] = useState(false);
+  console.log('logged', isLogged);
   return (
     <>
       <Routes>

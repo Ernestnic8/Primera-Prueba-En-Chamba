@@ -90,6 +90,16 @@ const RegistroProductoContainer = () => {
           {...register("imagen")}
         />
         <div>
+          <label className="label">Cantidad Disponible</label>
+        </div>
+        <TextField
+          name="stock"
+          label="Stock"
+          variant="filled"
+          required
+          {...register("stock")}
+        />
+        <div>
           <button className="boton" type="submit">
             Ingresar
           </button>

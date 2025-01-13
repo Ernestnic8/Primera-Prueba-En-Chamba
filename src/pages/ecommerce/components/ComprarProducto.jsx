@@ -7,10 +7,14 @@ import {
   CardContent,
   Fab,
   Grid,
+  Slide,
   Tooltip,
   Typography,
 } from "@mui/material";
-import { obtenerProductos } from "../../../api/ecommerce/productosApi";
+import {
+  obtenerProductos,
+  modificarStock,
+} from "../../../api/ecommerce/productosApi";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import CloseIcon from "@mui/icons-material/Close";
@@ -22,6 +26,9 @@ import { useEffect, useState } from "react";
 import propTypes from "prop-types";
 import Swal from "sweetalert2";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { set } from "react-hook-form";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 const ComprarProducto = ({ usuario }) => {
   const [data, setData] = useState([]);
@@ -30,6 +37,7 @@ const ComprarProducto = ({ usuario }) => {
   const [contar, setContar] = useState(0);
   const [carrito, setCarrito] = useState([]);
   const [total, setTotal] = useState(0);
+  const [abrir, setAbrir] = useState(false);
   const [open, setOpen] = useState(false);
 
   const handleNumFactura = () => {
@@ -40,6 +48,14 @@ const ComprarProducto = ({ usuario }) => {
     obtenerProductos().then((res) => {
       setData(res.data.response);
     });
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
   };
 
   useEffect(() => {
@@ -89,11 +105,43 @@ const ComprarProducto = ({ usuario }) => {
     doc.text("        Recibí", 160, 270);
     doc.text("Gracias por su compra", 90, 275);
     doc.save(`factura_${numFactura}.pdf`);
+    //setCarrito([]);
     setContar(contar + 1);
+    handleStock(carrito);
   };
 
   const handleOpen = () => {
-    setOpen(!open);
+    setAbrir(!abrir);
+  };
+
+  const handleStock = (producto) => {
+    producto.map((item) => {
+      const { id, stock, cantidad } = item;
+      const nuevaCantidad = stock - cantidad;
+      const data = { id: id, stock: nuevaCantidad };
+      modificarStock(id, data)
+        .then(() => {
+          Swal.fire({
+            icon: "success",
+            title: "Se ha realizado la compra",
+            color: "green",
+            confirmButtonColor: "green",
+          });
+          handleCarga();
+          setCarrito([]);
+        })
+        .catch((error) => {
+          console.log(error);
+          Swal.fire({
+            icon: "error",
+            title: "Error al procesar la compra",
+            text: error.response.data.message,
+            color: "red",
+            confirmButtonColor: "red",
+          });
+        });
+    });
+    // modificarStock(id, { stock: stock - cantidad });
   };
 
   const handleTotal = () => {
@@ -113,19 +161,28 @@ const ComprarProducto = ({ usuario }) => {
   }, [contar]);
 
   const handleAddCart = (producto) => {
-    const { id, titulo, precio, imagen } = producto;
-    setCarrito((prevCarrito) => {
-      const existeProducto = prevCarrito.find((item) => item.id === id);
-      if (existeProducto) {
-        return prevCarrito.map((item) =>
-          item.id === id ? { ...item, cantidad: item.cantidad + 1 } : item
-        );
-      }
-      return [
-        ...prevCarrito,
-        { id, nombre: titulo, precio, cantidad: 1, imagen },
-      ];
-    });
+    const { id, titulo, precio, imagen, stock } = producto;
+    stock > 0
+      ? setCarrito((prevCarrito) => {
+          setOpen(true);
+          const existeProducto = prevCarrito.find((item) => item.id === id);
+          if (existeProducto) {
+            return prevCarrito.map((item) =>
+              item.id === id ? { ...item, cantidad: item.cantidad + 1 } : item
+            );
+          }
+          return [
+            ...prevCarrito,
+            { id, nombre: titulo, precio, cantidad: 1, imagen, stock },
+          ];
+        })
+      : Swal.fire({
+          icon: "error",
+          title: "Producto no disponible",
+          color: "red",
+          text: "Lo sentimos, no hay stock disponible",
+          confirmButtonColor: "red",
+        });
   };
 
   const handleRemoveFromCart = (id) => {
@@ -165,10 +222,17 @@ const ComprarProducto = ({ usuario }) => {
     });
   };
 
-  const handleIncrementQuantity = (id) => {
+  const handleIncrementQuantity = (producto) => {
+    const { id, stock } = producto;
     setCarrito((prevCarrito) =>
       prevCarrito.map((item) =>
-        item.id === id ? { ...item, cantidad: item.cantidad + 1 } : item
+        item.id === id
+          ? {
+              ...item,
+              cantidad:
+                stock === item.cantidad ? item.cantidad : item.cantidad + 1,
+            }
+          : item
       )
     );
   };
@@ -227,6 +291,9 @@ const ComprarProducto = ({ usuario }) => {
                         style={{ maxWidth: "100%", maxHeight: "100%" }}
                       />
                     </Box>
+                    <Typography variant="body1" sx={{ textAlign: "center" }}>
+                      Disponibles: {producto.stock}
+                    </Typography>
                     <Typography variant="body2" sx={{ textAlign: "center" }}>
                       Precio: ${producto.precio.toFixed(2)}
                     </Typography>
@@ -263,9 +330,24 @@ const ComprarProducto = ({ usuario }) => {
           </Tooltip>
         </Box>
       </Box>
-
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        transitionDuration={3000}
+        TransitionComponent={Slide}
+      >
+        <Alert
+          onClose={handleClose}
+          severity="success"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          Se ha agregado el producto al carrito
+        </Alert>
+      </Snackbar>
       <div>
-        {open && (
+        {abrir && (
           <>
             <Box
               sx={{
@@ -364,6 +446,9 @@ const ComprarProducto = ({ usuario }) => {
                         />
                       </Box>
                       <Typography variant="body2" sx={{ textAlign: "center" }}>
+                        Disponible: {producto.stock - producto.cantidad}
+                      </Typography>
+                      <Typography variant="body2" sx={{ textAlign: "center" }}>
                         Precio: ${producto.precio}
                       </Typography>
                     </CardContent>
@@ -379,7 +464,7 @@ const ComprarProducto = ({ usuario }) => {
                       <Button
                         size="small"
                         sx={{ color: "green" }}
-                        onClick={() => handleIncrementQuantity(producto.id)}
+                        onClick={() => handleIncrementQuantity(producto)}
                       >
                         <AddIcon />
                       </Button>

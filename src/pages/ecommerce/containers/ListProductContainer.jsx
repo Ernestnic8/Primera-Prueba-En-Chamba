@@ -28,13 +28,13 @@ const ListProductContainer = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "id", //access nested data with dot notation
+        accessorKey: "id",
         header: "ID",
         enableEditing: false,
         size: 50,
       },
       {
-        accessorKey: "titulo", //access nested data with dot notation
+        accessorKey: "titulo",
         header: "Titulo",
         size: 150,
         Cell: ({ cell }) => {
@@ -77,6 +77,18 @@ const ListProductContainer = () => {
               alt={cell.row.original.titulo}
               style={{ width: "100px", height: "100px" }}
             />
+          );
+        },
+      },
+      {
+        accessorKey: "stock",
+        header: "Cantidad Disponible",
+        size: 50,
+        Cell: ({ cell }) => {
+          return (
+            <Box sx={{ textAlign: "center", fontWeight: "bold" }}>
+              {cell.row.original.stock}
+            </Box>
           );
         },
       },
@@ -232,7 +244,11 @@ const ListProductContainer = () => {
             zIndex: 1000,
           }}
         >
-          <Typography variant="caption" component="div" sx={{ color: 'text.secondary' }}> 
+          <Typography
+            variant="caption"
+            component="div"
+            sx={{ color: "text.secondary" }}
+          >
             {`${Math.round(progress)}%`}
           </Typography>
           <CircularProgress color="secondary" size={40} value={progress} />
