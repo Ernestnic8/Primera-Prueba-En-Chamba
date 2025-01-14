@@ -7,7 +7,14 @@ const carritoSlice = createSlice({
   },
   reducers: {
     agregarProducto(state, action) {
-      state.data.push(action.payload);
+      const { id, cantidad } = action.payload;
+      const index = state.data.findIndex((item) => item.id === id)
+      if(index < 0){
+        state.data.push(action.payload)
+      }
+      else{
+        state.data[index].cantidad = cantidad + 1;
+      }
     },
     eliminarProducto(state, action) {
       state.data = state.data.filter((item) => item.id !== action.payload);
@@ -26,6 +33,13 @@ const carritoSlice = createSlice({
   },
 });
 
-export const { agregarProducto, eliminarProducto, actualizarCantidad, limpiarCarrito,leerCarrito } = carritoSlice.actions;
+export const {
+  agregarProducto,
+  eliminarProducto,
+  actualizarCantidad,
+  limpiarCarrito,
+  leerCarrito,
+  reducirProducto
+} = carritoSlice.actions;
 
 export default carritoSlice.reducer;

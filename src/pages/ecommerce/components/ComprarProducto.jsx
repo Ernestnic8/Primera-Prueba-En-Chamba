@@ -28,7 +28,6 @@ import Swal from "sweetalert2";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { set } from "react-hook-form";
 import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
 import {
   agregarProducto,
   actualizarCantidad,
@@ -42,17 +41,20 @@ const ComprarProducto = ({ usuario }) => {
   const doc = new jsPDF({ format: "letter" });
   const [numFactura, setNumFactura] = useState(0);
   const [contar, setContar] = useState(0);
-  const [carrito, setCarrito] = useState([]);
   const [total, setTotal] = useState(0);
   const [abrir, setAbrir] = useState(false);
   const [open, setOpen] = useState(false);
-  const [newProduct, setNewProduct] = useState([]);
+  const [productos, setProductos] = useState([]);
   const dispatch = useDispatch();
   const carrt = useSelector((state) => state.carrito);
 
   const handleNumFactura = () => {
     setNumFactura(Math.floor(Math.random() * 100000));
   };
+
+  useEffect(() => {
+    setProductos(carrt.data);
+  }, [carrt]);
 
   const handleCarga = () => {
     obtenerProductos().then((res) => {
@@ -93,7 +95,7 @@ const ComprarProducto = ({ usuario }) => {
     );
     const columns = ["Producto", "Precio", "Cantidad", "Total"];
 
-    const rows = carrito.map((producto) => [
+    const rows = productos.map((producto) => [
       producto.nombre,
       producto.precio,
       producto.cantidad,
@@ -116,7 +118,7 @@ const ComprarProducto = ({ usuario }) => {
     doc.text("Gracias por su compra", 90, 275);
     doc.save(`factura_${numFactura}.pdf`);
     setContar(contar + 1);
-    handleStock(carrito);
+    handleStock(productos);
   };
 
   const handleOpen = () => {
@@ -137,7 +139,7 @@ const ComprarProducto = ({ usuario }) => {
             confirmButtonColor: "green",
           });
           handleCarga();
-          setCarrito([]);
+          dispatch(limpiarCarrito());
         })
         .catch((error) => {
           console.log(error);
@@ -155,7 +157,7 @@ const ComprarProducto = ({ usuario }) => {
 
   const handleTotal = () => {
     let total = 0;
-    carrito.map((producto) => {
+    productos.map((producto) => {
       total = total + producto.cantidad * producto.precio;
     });
     setTotal(Number(total.toFixed(2)));
@@ -163,7 +165,7 @@ const ComprarProducto = ({ usuario }) => {
 
   useEffect(() => {
     handleTotal();
-  }, [carrito]);
+  }, [productos]);
 
   useEffect(() => {
     handleNumFactura();
@@ -172,19 +174,16 @@ const ComprarProducto = ({ usuario }) => {
   const handleAddCart = (producto) => {
     const { id, titulo, precio, imagen, stock } = producto;
     stock > 0
-      ? setCarrito((prevCarrito) => {
-          setOpen(true);
-          const existeProducto = prevCarrito.find((item) => item.id === id);
-          if (existeProducto) {
-            return prevCarrito.map((item) =>
-              item.id === id ? { ...item, cantidad: item.cantidad + 1 } : item
-            );
-          }
-          return [
-            ...prevCarrito,
-            { id, nombre: titulo, precio, cantidad: 1, imagen, stock },
-          ];
-        })
+      ? (dispatch(
+          agregarProducto({
+            id,
+            nombre: titulo,
+            precio,
+            cantidad: 1,
+            imagen,
+            stock,
+          })
+        ), setOpen(true))
       : Swal.fire({
           icon: "error",
           title: "Producto no disponible",
@@ -192,7 +191,6 @@ const ComprarProducto = ({ usuario }) => {
           text: "Lo sentimos, no hay stock disponible",
           confirmButtonColor: "red",
         });
-    dispatch(agregarProducto({ id, nombre: titulo, precio, cantidad: 1, imagen, stock }));
   };
 
   const handleRemoveFromCart = (id) => {
@@ -207,9 +205,6 @@ const ComprarProducto = ({ usuario }) => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        setCarrito((prevCarrito) =>
-          prevCarrito.filter((item) => item.id !== id)
-        );
         dispatch(eliminarProducto(id));
       }
     });
@@ -227,7 +222,6 @@ const ComprarProducto = ({ usuario }) => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        setCarrito([]);
         setTotal(0);
         dispatch(limpiarCarrito());
       }
@@ -236,37 +230,18 @@ const ComprarProducto = ({ usuario }) => {
 
   const handleIncrementQuantity = (producto) => {
     const { id, stock } = producto;
-    setCarrito((prevCarrito) =>
-      prevCarrito.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              cantidad:
-                stock === item.cantidad ? item.cantidad : item.cantidad + 1,
-            }
-          : item
-      )
-    );
-    dispatch(actualizarCantidad({ id, cantidad: producto.cantidad + 1 }));
+    dispatch(actualizarCantidad({ id, cantidad: stock === producto.cantidad 
+      ? producto.cantidad 
+      : producto.cantidad + 1, }));
   };
 
   const handleDecrementQuantity = (producto) => {
     const { id } = producto;
-    setCarrito(
-      (prevCarrito) =>
-        prevCarrito
-          .map((item) =>
-            item.id === id
-              ? { ...item, cantidad: item.cantidad > 1 ? item.cantidad - 1 : 1 }
-              : item
-          )
-          .filter((item) => item.cantidad > 0) // Remover si la cantidad llega a 0
-    );
     dispatch(
-      actualizarCantidad({
-        id,
-        cantidad: producto.cantidad > 1 ? producto.cantidad - 1 : 1,
-      })
+      actualizarCantidad({id, cantidad : 
+        producto.cantidad > 1 ? 
+        producto.cantidad - 1 : 1 
+       })
     );
   };
 
@@ -343,7 +318,7 @@ const ComprarProducto = ({ usuario }) => {
         >
           <Tooltip title="Ver Carrito">
             <Fab color="primary" onClick={handleOpen}>
-              <Badge badgeContent={carrito.length} color="warning">
+              <Badge badgeContent={productos.length} color="warning">
                 <ShoppingCartIcon />
               </Badge>
             </Fab>
@@ -352,20 +327,13 @@ const ComprarProducto = ({ usuario }) => {
       </Box>
       <Snackbar
         open={open}
-        autoHideDuration={6000}
+        autoHideDuration={800}
         onClose={handleClose}
-        transitionDuration={3000}
+        transitionDuration={1000}
         TransitionComponent={Slide}
-      >
-        <Alert
-          onClose={handleClose}
-          severity="success"
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          Se ha agregado el producto al carrito
-        </Alert>
-      </Snackbar>
+        message="Se ha agregado al carrito"
+        variant="success"
+      ></Snackbar>
       <div>
         {abrir && (
           <>
@@ -418,8 +386,7 @@ const ComprarProducto = ({ usuario }) => {
                   Carrito de compra
                 </Typography>
               </div>
-              {console.log("carrt",carrt)}
-              {carrt.length === 0 && (
+              {productos.length === 0 && (
                 <Typography
                   variant="h5"
                   component="div"
@@ -436,8 +403,8 @@ const ComprarProducto = ({ usuario }) => {
                   No hay productos en el carrito
                 </Typography>
               )}
-              {carrito.length > 0 &&
-                carrito.map((producto) => (
+              {productos.length > 0 &&
+                productos.map((producto) => (
                   <Card
                     key={producto.id}
                     variant="outlined"
@@ -477,7 +444,7 @@ const ComprarProducto = ({ usuario }) => {
                       <Button
                         size="small"
                         sx={{ color: "red" }}
-                        onClick={() => handleDecrementQuantity(producto.id)}
+                        onClick={() => handleDecrementQuantity(producto)}
                       >
                         <RemoveIcon />
                       </Button>
@@ -501,7 +468,7 @@ const ComprarProducto = ({ usuario }) => {
                     </CardActions>
                   </Card>
                 ))}
-              {carrito.length > 0 && (
+              {productos.length > 0 && (
                 <Box
                   sx={{
                     display: "block",
