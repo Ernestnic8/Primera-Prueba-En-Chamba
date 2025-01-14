@@ -5,12 +5,15 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import propTypes from "prop-types";
 import Swal from "sweetalert2";
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/usuarioSlice";
 
 const Login = ({setIsLogged, Usuario}) => {
   const [user, setUser] = useState([]);
   var usuario = [];
   const nav = useNavigate();
   const { register, handleSubmit } = useForm();
+  const dispatch = useDispatch();
   const onSubmit = (data) => {
     usuario = user.find((element) => element.usuario === data.usuario);
     if (usuario === undefined) {
@@ -25,6 +28,7 @@ const Login = ({setIsLogged, Usuario}) => {
       if (usuario.pass === data.pass) {
         Usuario((us) => [...us,{ nombre: usuario.nombre + " " + usuario.apellido}]);
         setIsLogged(true);
+        dispatch(login({nombre: usuario.nombre + " " + usuario.apellido, log:true}));
         usuario = [];
         nav("/ecommerce/productos");
       } else {

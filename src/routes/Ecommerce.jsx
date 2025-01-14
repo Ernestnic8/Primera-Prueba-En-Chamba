@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ListUserPages from "../pages/ecommerce/pages/ListUserPages";
 import Login from "../pages/ecommerce/Login";
 import ListProductPage from "../pages/ecommerce/pages/ListProductPage";
@@ -8,10 +8,25 @@ import RegistroProductoPage from "../pages/ecommerce/pages/RegistroProductoPage"
 import LayoutEcomm from "../components/LayoutEcomm";
 import LayoutInicio from "../components/LayoutInicio";
 import ComprarProducto from "../pages/ecommerce/components/ComprarProducto";
+import { useSelector } from "react-redux";
+import { use } from "react";
 
 const Ecommerce = () => {
   const [isLogged, setIsLogged] = useState(false);
   const [user, setUser] = useState([]);
+  const userLogged = useSelector((state) => state.usuario);
+  
+  useEffect(() => {
+    //setUser(userLogged.data);
+    // if (user.find((element) => element.log === true)) {
+    //   setIsLogged(true);
+    // }else{
+    //   setIsLogged(false);
+    // }
+  }, [userLogged]);
+
+  console.log("logged", userLogged);
+
   return (
     <>
       <Routes>
@@ -60,7 +75,7 @@ const Ecommerce = () => {
           element={
             isLogged ? (
               <>
-                <LayoutEcomm /> <ComprarProducto usuario={user} />
+                <LayoutEcomm /> <ComprarProducto />
               </>
             ) : (
               <Navigate to="/" />

@@ -23,7 +23,6 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useEffect, useState } from "react";
-import propTypes from "prop-types";
 import Swal from "sweetalert2";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { set } from "react-hook-form";
@@ -36,7 +35,7 @@ import {
 } from "../../../redux/carritoSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-const ComprarProducto = ({ usuario }) => {
+const ComprarProducto = () => {
   const [data, setData] = useState([]);
   const doc = new jsPDF({ format: "letter" });
   const [numFactura, setNumFactura] = useState(0);
@@ -47,6 +46,7 @@ const ComprarProducto = ({ usuario }) => {
   const [productos, setProductos] = useState([]);
   const dispatch = useDispatch();
   const carrt = useSelector((state) => state.carrito);
+  const usuario = useSelector((state) => state.usuario.data);
 
   const handleNumFactura = () => {
     setNumFactura(Math.floor(Math.random() * 100000));
@@ -506,8 +506,5 @@ const ComprarProducto = ({ usuario }) => {
   );
 };
 
-ComprarProducto.propTypes = {
-  usuario: propTypes.func,
-};
 
 export default ComprarProducto;
