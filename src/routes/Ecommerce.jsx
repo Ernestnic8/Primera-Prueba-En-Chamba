@@ -16,17 +16,6 @@ const Ecommerce = () => {
   const [user, setUser] = useState([]);
   const userLogged = useSelector((state) => state.usuario);
   
-  useEffect(() => {
-    //setUser(userLogged.data);
-    // if (user.find((element) => element.log === true)) {
-    //   setIsLogged(true);
-    // }else{
-    //   setIsLogged(false);
-    // }
-  }, [userLogged]);
-
-  console.log("logged", userLogged);
-
   return (
     <>
       <Routes>
