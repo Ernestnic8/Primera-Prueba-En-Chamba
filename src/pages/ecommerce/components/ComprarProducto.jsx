@@ -1,15 +1,17 @@
 import {
-  Badge,
   Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Fab,
-  Grid,
-  Slide,
-  Tooltip,
   Typography,
+  Grid,
+  Card,
+  CardContent,
+  CardActions,
+  Button,
+  Tooltip,
+  Fab,
+  Badge,
+  Select,
+  MenuItem,
+  Slide,
 } from "@mui/material";
 import {
   obtenerProductos,
@@ -47,6 +49,78 @@ const ComprarProducto = () => {
   const dispatch = useDispatch();
   const carrt = useSelector((state) => state.carrito);
   const usuario = useSelector((state) => state.usuario.data);
+
+  const [cardStyle, setCardStyle] = useState("default");
+
+  const cardStyles = {
+    default: {
+      card: {
+        borderRadius: "12px",
+        border: "1px solid #ddd",
+        backgroundColor: "#fff",
+        transition: "transform 0.3s",
+        "&:hover": {
+          transform: "scale(1.05)",
+        },
+      },
+      imageContainer: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        margin: "1rem 0",
+      },
+    },
+    gradient: {
+      card: {
+        borderRadius: "15px",
+        background: "linear-gradient(135deg, #ff7eb3, #ff758c)",
+        color: "#fff",
+        padding: "1rem",
+        boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
+        transition: "transform 0.3s",
+        "&:hover": {
+          transform: "translateY(-10px)",
+          boxShadow: "0 8px 30px rgba(0, 0, 0, 0.3)",
+        },
+      },
+      imageContainer: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        margin: "1rem 0",
+        borderRadius: "10px",
+        overflow: "hidden",
+        boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
+      },
+    },
+    minimal: {
+      card: {
+        borderRadius: "20px",
+        border: "1px solid #e0e0e0",
+        backgroundColor: "#f9f9f9",
+        padding: "1.5rem",
+        boxShadow: "0 5px 15px rgba(0, 0, 0, 0.05)",
+        transition: "all 0.3s ease-in-out",
+        "&:hover": {
+          transform: "scale(1.03)",
+          backgroundColor: "#ffffff",
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
+        },
+      },
+      imageContainer: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        margin: "1.5rem 0",
+        backgroundColor: "#fff",
+        borderRadius: "12px",
+        overflow: "hidden",
+        border: "1px solid #ddd",
+      },
+    },
+  };
+
+  const currentStyle = cardStyles[cardStyle];
 
   const handleNumFactura = () => {
     setNumFactura(Math.floor(Math.random() * 100000));
@@ -175,22 +249,22 @@ const ComprarProducto = () => {
     const { id, titulo, precio, imagen, stock } = producto;
     stock > 0
       ? (dispatch(
-          agregarProducto({
-            id,
-            nombre: titulo,
-            precio,
-            cantidad: 1,
-            imagen,
-            stock,
-          })
-        ), setOpen(true))
+        agregarProducto({
+          id,
+          nombre: titulo,
+          precio,
+          cantidad: 1,
+          imagen,
+          stock,
+        })
+      ), setOpen(true))
       : Swal.fire({
-          icon: "error",
-          title: "Producto no disponible",
-          color: "red",
-          text: "Lo sentimos, no hay stock disponible",
-          confirmButtonColor: "red",
-        });
+        icon: "error",
+        title: "Producto no disponible",
+        color: "red",
+        text: "Lo sentimos, no hay stock disponible",
+        confirmButtonColor: "red",
+      });
   };
 
   const handleRemoveFromCart = (id) => {
@@ -230,18 +304,21 @@ const ComprarProducto = () => {
 
   const handleIncrementQuantity = (producto) => {
     const { id, stock } = producto;
-    dispatch(actualizarCantidad({ id, cantidad: stock === producto.cantidad 
-      ? producto.cantidad 
-      : producto.cantidad + 1, }));
+    dispatch(actualizarCantidad({
+      id, cantidad: stock === producto.cantidad
+        ? producto.cantidad
+        : producto.cantidad + 1,
+    }));
   };
 
   const handleDecrementQuantity = (producto) => {
     const { id } = producto;
     dispatch(
-      actualizarCantidad({id, cantidad : 
-        producto.cantidad > 1 ? 
-        producto.cantidad - 1 : 1 
-       })
+      actualizarCantidad({
+        id, cantidad:
+          producto.cantidad > 1 ?
+            producto.cantidad - 1 : 1
+      })
     );
   };
 
@@ -254,42 +331,57 @@ const ComprarProducto = () => {
         >
           Lista de Productos
         </Typography>
+
+        {/* Selector de estilo */}
+        <Box sx={{ display: "flex", justifyContent: "center", gap: "1rem", marginBottom: "1rem" }}>
+          <Select
+            value={cardStyle}
+            onChange={(e) => setCardStyle(e.target.value)}
+            sx={{ minWidth: "200px" }}
+          >
+            <MenuItem value="default">Estilo Predeterminado</MenuItem>
+            <MenuItem value="gradient">Gradiente</MenuItem>
+            <MenuItem value="minimal">Minimalista</MenuItem>
+          </Select>
+        </Box>
+
         <Grid container spacing={3} justifyContent="center">
           {data.length > 0 &&
             data.map((producto) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={producto.id}>
                 <Card
                   variant="outlined"
-                  sx={{ height: "100%", borderRadius: "12px" }}
+                  sx={currentStyle.card}
                 >
                   <CardContent>
                     <Typography
                       variant="h5"
                       component="div"
-                      sx={{ textAlign: "center" }}
+                      sx={{ textAlign: "center", fontWeight: "bold" }}
                     >
                       {producto.titulo}
                     </Typography>
-                    <Box
-                      sx={{
-                        width: "100%",
-                        height: "200px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        margin: "1rem 0",
-                      }}
-                    >
+                    <Box sx={currentStyle.imageContainer}>
                       <img
                         src={producto.imagen}
                         alt={producto.nombre}
                         style={{ maxWidth: "100%", maxHeight: "100%" }}
                       />
                     </Box>
-                    <Typography variant="body1" sx={{ textAlign: "center" }}>
+                    <Typography
+                      variant="body1"
+                      sx={{ textAlign: "center", color: "#757575", margin: "0.5rem 0" }}
+                    >
                       Disponibles: {producto.stock}
                     </Typography>
-                    <Typography variant="body2" sx={{ textAlign: "center" }}>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        textAlign: "center",
+                        color: "#424242",
+                        fontWeight: "bold",
+                      }}
+                    >
                       Precio: ${producto.precio.toFixed(2)}
                     </Typography>
                   </CardContent>
@@ -297,7 +389,14 @@ const ComprarProducto = () => {
                     <Tooltip title="Agregar al carrito">
                       <Button
                         size="small"
-                        sx={{ color: "blue" }}
+                        sx={{
+                          color: "#2196f3",
+                          border: "1px solid #2196f3",
+                          "&:hover": {
+                            backgroundColor: "#2196f3",
+                            color: "#fff",
+                          },
+                        }}
                         onClick={() => handleAddCart(producto)}
                       >
                         <AddShoppingCartIcon />
@@ -308,6 +407,7 @@ const ComprarProducto = () => {
               </Grid>
             ))}
         </Grid>
+
         <Box
           sx={{
             position: "fixed",
